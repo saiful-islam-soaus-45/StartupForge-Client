@@ -40,7 +40,7 @@ export default function Navbar() {
             href="/opportunities"
             className="hover:text-indigo-600 transition"
           >
-            Opportunities
+           Browse Opportunities
           </Link>
         </div>
 
@@ -100,7 +100,7 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
               className="hover:text-indigo-600 transition py-1 text-lg"
             >
-              Opportunities
+              Browse Opportunities
             </Link>
           </div>
 
