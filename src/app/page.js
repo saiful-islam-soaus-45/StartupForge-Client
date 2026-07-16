@@ -1,3 +1,4 @@
+import Banner from "@/components/Banner";
 import Image from "next/image";
 
 export default function Home() {
@@ -60,6 +61,7 @@ export default function Home() {
           </a>
         </div>
       </main> */}
+      <Banner />
     </div>
   );
 }
