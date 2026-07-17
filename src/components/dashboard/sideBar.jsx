@@ -22,7 +22,7 @@ export default function SideBar() {
     { name: "Overview", href: "/dashboard", icon: FiPieChart },
     { name: "My Startup", href: "/dashboard/my-startup", icon: FiBriefcase },
     { name: "Add Opportunity", href: "/dashboard/add-opportunity", icon: FiPlusSquare },
-    { name: "Manage Opportunities", href: "/dashboard/manage-opportunities", icon: FiFolder },
+    { name: "Manage Opportunities", href: "/dashboard/manage-opportunity", icon: FiFolder },
     { name: "Applications", href: "/dashboard/applications", icon: FiFileText },
   ];
 
