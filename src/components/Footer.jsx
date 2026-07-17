@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { 
   FiMail, 
   FiPhone, 
@@ -13,6 +14,12 @@ import {
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+
+   //dashboard e footer remove korar jonno
+    const pathname = usePathname();
+    if(pathname.includes("dashboard")){
+      return null
+    }
 
   return (
     <footer className="w-full bg-slate-50 border-t border-slate-200 mt-auto">

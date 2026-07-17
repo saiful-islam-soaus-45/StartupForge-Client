@@ -2,21 +2,23 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FiRefreshCw, FiMenu, FiX, FiChevronDown, FiUser, FiLogOut } from "react-icons/fi";
 import { RxDashboard } from "react-icons/rx";
 import { authClient } from "@/lib/auth-client"; // আপনার Better-Auth ক্লায়েন্ট
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname(); // ১. সব হুক শুরুতে থাকবে
+  const dropdownRef = useRef(null);
+  
   const [isOpen, setIsOpen] = useState(false); // মোবাইল মেনুর জন্য
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // প্রোফাইল ড্রপডাউনের জন্য
-  const dropdownRef = useRef(null);
 
-  // সেশন ডেটা চেক করার জন্য Better-Auth হুক
+  // ২. সেশন ডেটা চেক করার জন্য Better-Auth হুক (সবসময় কন্ডিশনের উপরে থাকবে)
   const { data: session } = authClient.useSession();
 
-  // ড্রপডাউনের বাইরে ক্লিক করলে যেন ড্রপডাউন বন্ধ হয়ে যায়
+  // ৩. ড্রপডাউনের বাইরে ক্লিক করলে যেন ড্রপডাউন বন্ধ হয়ে যায়
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -27,6 +29,11 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // 🎯 ৪. ড্যাশবোর্ডে নেববার রিমুভ করার কন্ডিশন (সব হুক ডিফাইন করার পর নিচে বসবে)
+  if (pathname.includes("dashboard")) {
+    return null;
+  }
+
   // লগআউট হ্যান্ডলার ফাংশন
   const handleLogout = async () => {
     await authClient.signOut({
@@ -34,7 +41,7 @@ export default function Navbar() {
         onSuccess: () => {
           setIsDropdownOpen(false);
           setIsOpen(false);
-          router.push("/auth/login"); // লগআউট হলে লগইন পেজে নিয়ে যাবে
+          router.push("/auth/login"); // লগআউট হলে লগইন পেজে নিয়ে যাবে
           router.refresh();
         },
       },
@@ -79,7 +86,7 @@ export default function Navbar() {
               </Link>
             </>
           ) : (
-            /* 🎯 আপনার স্ক্রিনশটের মতো ডাইনামিক প্রোফাইল ড্রপডাউন বাটন */
+            /* 🎯 ডাইনামিক প্রোফাইল ড্রপডাউন বাটন */
             <div className="relative" ref={dropdownRef}>
               <button 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -99,7 +106,6 @@ export default function Navbar() {
                 <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-slate-100 bg-white p-2.5 shadow-xl shadow-slate-200/80 animate-in fade-in slide-in-from-top-2 duration-150">
                   <div className="px-3 py-2">
                     <p className="text-[11px] font-medium text-slate-400">Signed in as</p>
-                    {/* ডাটাবেজ থেকে আসা কাস্টম রোল (যেমন: collaborator) */}
                     <p className="text-sm font-bold text-slate-800 capitalize mt-0.5">
                       {session.user.role || "User"}
                     </p>
@@ -171,7 +177,6 @@ export default function Navbar() {
                 </Link>
               </>
             ) : (
-              /* মোবাইলের জন্যও গুছানো প্রোফাইল ইনফো ও মেনু */
               <div className="space-y-3">
                 <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl">
                   <img
