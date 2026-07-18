@@ -15,7 +15,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false); // মোবাইল মেনুর জন্য
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // প্রোফাইল ড্রপডাউনের জন্য
 
-  // ২. সেশন ডেটা চেক করার জন্য Better-Auth হুক (সবসময় কন্ডিশনের উপরে থাকবে)
+  // ২. সেশন ডেটা চেক করার জন্য Better-Auth হুক (সবসময় কন্ডিশনের উপরে থাকবে)
   const { data: session } = authClient.useSession();
 
   // ৩. ড্রপডাউনের বাইরে ক্লিক করলে যেন ড্রপডাউন বন্ধ হয়ে যায়
@@ -72,7 +72,7 @@ export default function Navbar() {
 
         {/* Right Side Buttons - Desktop */}
         <div className="hidden items-center gap-3 md:flex">
-          <button className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition">
+          <button className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition cursor-pointer">
             <FiRefreshCw size={18} />
           </button>
 
@@ -90,7 +90,7 @@ export default function Navbar() {
             <div className="relative" ref={dropdownRef}>
               <button 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white p-1.5 pr-3 hover:bg-gray-50 transition"
+                className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white p-1.5 pr-3 hover:bg-gray-50 transition cursor-pointer"
               >
                 <img
                   src={session.user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`}
@@ -117,7 +117,7 @@ export default function Navbar() {
                     <Link 
                       href="/dashboard" 
                       onClick={() => setIsDropdownOpen(false)}
-                      className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition"
+                      className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer"
                     >
                       <RxDashboard size={16} className="text-slate-400" />
                       Dashboard
@@ -126,7 +126,7 @@ export default function Navbar() {
                     <Link 
                       href="/profile" 
                       onClick={() => setIsDropdownOpen(false)}
-                      className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition"
+                      className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer"
                     >
                       <FiUser size={16} className="text-slate-400" />
                       Profile
@@ -134,7 +134,7 @@ export default function Navbar() {
                     
                     <button 
                       onClick={handleLogout}
-                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition text-left"
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition text-left cursor-pointer"
                     >
                       <FiLogOut size={16} className="text-rose-400" />
                       Logout
@@ -148,7 +148,7 @@ export default function Navbar() {
 
         {/* Mobile Menu Button */}
         <div className="flex md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)} className="p-2 text-gray-700 hover:text-indigo-600 transition">
+          <button onClick={() => setIsOpen(!isOpen)} className="p-2 text-gray-700 hover:text-indigo-600 transition cursor-pointer">
             {isOpen ? <FiX size={26} /> : <FiMenu size={26} />}
           </button>
         </div>
@@ -190,14 +190,14 @@ export default function Navbar() {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <Link href="/dashboard" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 py-2.5 text-xs font-semibold text-slate-700">
+                  <Link href="/dashboard" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 py-2.5 text-xs font-semibold text-slate-700 cursor-pointer">
                     <RxDashboard size={14} /> Dashboard
                   </Link>
-                  <Link href="/profile" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 py-2.5 text-xs font-semibold text-slate-700">
+                  <Link href="/profile" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 py-2.5 text-xs font-semibold text-slate-700 cursor-pointer">
                     <FiUser size={14} /> Profile
                   </Link>
                 </div>
-                <button onClick={handleLogout} className="flex w-full items-center justify-center gap-2 rounded-xl bg-rose-50 py-2.5 text-xs font-bold text-rose-600">
+                <button onClick={handleLogout} className="flex w-full items-center justify-center gap-2 rounded-xl bg-rose-50 py-2.5 text-xs font-bold text-rose-600 cursor-pointer">
                   <FiLogOut size={14} /> Logout
                 </button>
               </div>
