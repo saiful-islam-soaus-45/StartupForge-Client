@@ -216,7 +216,7 @@ export default function AddOpportunityPage() {
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 text-sm font-semibold text-white hover:bg-indigo-700 transition shadow-md hover:shadow-indigo-100 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
             >
               {isLoading ? <FiLoader className="animate-spin" /> : <FiPlusSquare size={18} />}
-              <span>{isLoading ? "Publishing Opportunity..." : "Publish Opportunity"}</span>
+              <span>{isLoading ? "Posting Opportunity..." : "Post Opportunity"}</span>
             </button>
           </motion.div>
 
