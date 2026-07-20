@@ -1,24 +1,40 @@
-import SideBar from "@/components/dashboard/sideBar";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import FounderSidebar from "@/components/dashboard/FounderSidebar";
+import CollaboratorSidebar from "@/components/dashboard/CollaboratorSidebar"; // Collaborator সাইডবার ইমপোর্ট
 
-export const metadata = {
-  title: "Dashboard | Startup Forge",
-};
+export default async function DashboardLayout({ children }) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-export default function DashboardLayout({ children }) {
+  if (!session) {
+    redirect("/auth/login");
+  }
+
+  // Better-Auth থেকে লাইভ ইউজার ডেটা ও রোল নেওয়া হচ্ছে
+  const loggedInUser = {
+    name: session.user.name,
+    image: session.user.image,
+    role: session.user.role?.toLowerCase() || "founder", // lowercase করে নেওয়া সেফ
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50/50 text-slate-900 flex flex-col lg:flex-row">
-      {/* রেসপন্সিভ সাইডবার */}
-      <SideBar />
-
-      {/* 
-        - lg:pl-64: বড় স্ক্রিনে (Desktop) বামে সাইডবারের জন্য ৬৪ সাইজ জায়গা খালি থাকবে।
-        - w-full: মোবাইল ও ট্যাবলেটে কন্টেন্ট পুরো স্ক্রিন জুড়ে থাকবে।
-      */}
-      <div className="w-full lg:pl-64 flex-1">
-        <main className="mx-auto max-w-7xl p-4 md:p-6 lg:p-8 min-h-screen">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-slate-50/50">
+      {/* 🔄 রোল অনুযায়ী ডাইনামিক সাইডবার রেন্ডারিং */}
+      {loggedInUser.role === "collaborator" ? (
+        <CollaboratorSidebar user={loggedInUser} />
+      ) : (
+        <FounderSidebar user={loggedInUser} />
+      )}
+      
+      {/* ডান পাশে মেইন কメント এরিয়া */}
+      <main className="flex-1 p-6 lg:p-10 overflow-x-auto">
+        <div className="w-full max-w-7xl mx-auto">
           {children}
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

@@ -21,7 +21,7 @@ export default function SignupPage() {
     const [imageUrl, setImageUrl] = useState("");
     const [isUploading, setIsUploading] = useState(false);
 
-    // পাসওয়ার্ড ভ্যালিডেশন চেকার্স
+    // পাসওয়ার্ড ভ্যালিডেশন চেকার্স
     const hasMinLength = password.length >= 6;
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
@@ -38,21 +38,11 @@ export default function SignupPage() {
         const formData = new FormData();
         formData.append("image", file);
 
-        // 🎯 সরাসরি .env ফাইল থেকে আপনার দেওয়া API Key-টি নেওয়া হচ্ছে
         const IMGBB_API_KEY = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
 
         if (!IMGBB_API_KEY) {
-            // API Key না থাকলে টেস্টিং এর সুবিধার জন্য একটি ডিফল্ট জেনারেটেড অ্যাভাটার সেট করবে
             setTimeout(() => {
-                // আপনি যদি সিঙ্গেল 'user' অবজেক্ট স্টেট ব্যবহার করেন:
-                setUser((prev) => ({
-                    ...prev,
-                    image: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(user.name || "user")}`
-                }));
-
-                // অথবা আলাদা 'setImageUrl' স্টেট ব্যবহার করলে নিচেরটি আনকমেন্ট করুন:
-                // setImageUrl(`https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name || "user")}`);
-
+                setImageUrl(`https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name || "user")}`);
                 setIsUploading(false);
                 alert("Using placeholder avatar. Please put your real ImgBB API key in the .env file for actual file uploads!");
             }, 800);
@@ -78,7 +68,7 @@ export default function SignupPage() {
         }
     };
 
-    // ফর্ম সাবমিট ও Better-Auth দিয়ে অ্যাকাউন্ট তৈরি
+    // ফর্ম সাবমিট ও Better-Auth দিয়ে অ্যাকাউন্ট তৈরি
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -90,14 +80,13 @@ export default function SignupPage() {
         setIsLoading(true);
         setErrorMsg("");
 
-
         try {
             await authClient.signUp.email({
                 email,
                 password,
                 name,
                 image: imageUrl || undefined,
-                data: { role }, // Better-Auth এর কাস্টম ডাটাতে রোল পাস করা হচ্ছে
+                role: role, // ⚡ ফিক্স: Better-Auth এ কাস্টম এডিশনাল ফিল্ড এভাবে সরাসরি পাস করতে হয়
                 callbackURL: "/", // সফল হলে হোম পেজে রিডাইরেক্ট হবে
             }, {
                 onRequest: () => setIsLoading(true),
@@ -119,7 +108,6 @@ export default function SignupPage() {
 
     return (
         <div className="flex min-h-[90vh] items-center justify-center bg-slate-50/50 px-4 py-8">
-            {/* স্লিম ও কম্প্যাক্ট সাইজ max-w-[400px] */}
             <div className="w-full max-w-[400px] rounded-2xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-100/50">
 
                 {/* লোগো ও হেডার */}
@@ -144,8 +132,6 @@ export default function SignupPage() {
                         {errorMsg}
                     </div>
                 )}
-
-
 
                 {/* ডিভাইডার */}
                 <div className="relative my-4">
@@ -196,7 +182,7 @@ export default function SignupPage() {
                         </div>
                     </div>
 
-                    {/* রোল সিলেকশন (মডার্ন সেগমেন্টেড কন্ট্রোল) */}
+                    {/* রোল সিলেকশন */}
                     <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1.5">Select Role</label>
                         <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-slate-100 p-1">
@@ -223,7 +209,7 @@ export default function SignupPage() {
                         </div>
                     </div>
 
-                    {/* ইমেজ আপলোড (Imgbb) */}
+                    {/* ইমেজ আপলোড */}
                     <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1">Profile Image</label>
                         <div className="flex items-center gap-3">
@@ -251,7 +237,7 @@ export default function SignupPage() {
                         </div>
                     </div>
 
-                    {/* পাসওয়ার্ড ফিল্ড ও রিয়েল-টাইম কন্ডিশন চেকার */}
+                    {/* পাসওয়ার্ড ফিল্ড */}
                     <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1">Password</label>
                         <div className="relative rounded-xl shadow-sm">
@@ -275,29 +261,20 @@ export default function SignupPage() {
                             </button>
                         </div>
 
-                        {/* পাসওয়ার্ড রুলস ইন্ডিকেটর */}
+                        {/* পাসওয়ার্ড ইন্ডিকেটর */}
                         <div className="mt-2 space-y-1 rounded-xl bg-slate-50 p-2 border border-slate-100/70">
                             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Requirements:</p>
-
                             <div className="flex items-center gap-1 text-[10px]">
                                 {hasMinLength ? <FiCheck className="text-emerald-500" /> : <FiX className="text-rose-400" />}
-                                <span className={hasMinLength ? "text-emerald-600 font-semibold" : "text-slate-400"}>
-                                    Min 6 characters
-                                </span>
+                                <span className={hasMinLength ? "text-emerald-600 font-semibold" : "text-slate-400"}>Min 6 characters</span>
                             </div>
-
                             <div className="flex items-center gap-1 text-[10px]">
                                 {hasUppercase ? <FiCheck className="text-emerald-500" /> : <FiX className="text-rose-400" />}
-                                <span className={hasUppercase ? "text-emerald-600 font-semibold" : "text-slate-400"}>
-                                    At least one uppercase letter (A-Z)
-                                </span>
+                                <span className={hasUppercase ? "text-emerald-600 font-semibold" : "text-slate-400"}>At least one uppercase letter (A-Z)</span>
                             </div>
-
                             <div className="flex items-center gap-1 text-[10px]">
                                 {hasLowercase ? <FiCheck className="text-emerald-500" /> : <FiX className="text-rose-400" />}
-                                <span className={hasLowercase ? "text-emerald-600 font-semibold" : "text-slate-400"}>
-                                    At least one lowercase letter (a-z)
-                                </span>
+                                <span className={hasLowercase ? "text-emerald-600 font-semibold" : "text-slate-400"}>At least one lowercase letter (a-z)</span>
                             </div>
                         </div>
                     </div>
@@ -321,7 +298,6 @@ export default function SignupPage() {
                                 "Sign up"
                             )}
                         </button>
-                        {/* Google দিয়ে ওয়ান-ক্লিক সাইনআপ */}
                         <div className="mt-4">
                             <button
                                 type="button"
@@ -337,14 +313,12 @@ export default function SignupPage() {
                     </div>
                 </form>
 
-                {/* সাইন-ইন পেজে ব্যাক করার লিংক */}
                 <p className="mt-5 text-center text-xs font-medium text-gray-400">
                     Already have an account?{" "}
                     <Link href="/auth/login" className="font-semibold text-indigo-600 hover:text-indigo-500 transition">
                         Sign in
                     </Link>
                 </p>
-
             </div>
         </div>
     );
