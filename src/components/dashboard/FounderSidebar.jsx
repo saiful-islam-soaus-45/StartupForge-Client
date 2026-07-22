@@ -49,10 +49,10 @@ export default function FounderSidebar({ user }) {
     <>
       {/* 📱 মোবাইল ও ট্যাবলেটের হোয়াইট টপবার */}
       <div className="lg:hidden w-full bg-white text-slate-800 p-4 flex items-center justify-between border-b border-slate-100 sticky top-0 z-50">
-        <div className="flex flex-col items-start gap-1">
+        <div className="flex flex-col items-start gap-1 ">
           <button 
             onClick={() => router.push("/")}
-            className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 hover:text-[#4F46E5] transition"
+            className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 hover:text-[#4F46E5] transition "
           >
             <HiOutlineArrowLeft className="w-3 h-3 stroke-[2.5]" />
             <span>Back</span>
@@ -81,10 +81,10 @@ export default function FounderSidebar({ user }) {
       `}>
         
         {/* ⚡ টপ হেডার সেকশন */}
-        <div className="p-5 border-b border-slate-50 flex flex-col items-start gap-3">
+        <div className="p-5 border-b border-slate-50 flex flex-col items-start gap-3 ">
           <button 
             onClick={() => router.push("/")}
-            className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-[#4F46E5] transition bg-slate-50 hover:bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200"
+            className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-[#4F46E5] transition bg-slate-50 hover:bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 cursor-pointer"
           >
             <HiOutlineArrowLeft className="w-3 h-3 stroke-[2.5]" />
             <span>Back</span>

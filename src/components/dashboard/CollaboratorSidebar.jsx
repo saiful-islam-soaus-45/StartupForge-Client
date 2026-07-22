@@ -1,29 +1,50 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { LuLayoutDashboard, LuSend, LuFolderHeart, LuUser } from "react-icons/lu";
+import { LuLayoutDashboard, LuFolderHeart, LuUser } from "react-icons/lu";
 import { HiOutlineArrowLeft, HiBars3 } from "react-icons/hi2";
 
 export default function CollaboratorSidebar({ user }) {
   const router = useRouter();
   const currentPath = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  
+  // 🎯 ডাইনামিক প্রোফাইল স্টেট (লাইভ ডাটা সিঙ্কের জন্য)
+  const [dbProfile, setDbProfile] = useState({ name: "", image: "" });
+  const userEmail = user?.email || "soausahmedbd91@gmail.com";
 
-  // কোলাবোরেটরের স্পেসিফিক মেনু আইটেমসমূহ
+  // ডাটাবেজ থেকে লাইভ প্রোফাইল ডাটা লোড করা
+  useEffect(() => {
+    if (!userEmail) return;
+
+    const fetchSidebarProfile = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/profile/${userEmail}`);
+        const resData = await res.json();
+        
+        if (resData.success && resData.data) {
+          setDbProfile({
+            name: resData.data.name || user?.name || "",
+            image: resData.data.image || user?.image || "",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching sidebar dynamic profile:", error);
+      }
+    };
+
+    fetchSidebarProfile();
+  }, [userEmail, user]);
+
+  // 🎯 "Apply to Opportunity" অপশনটি এখান থেকে সম্পূর্ণ বাদ দেওয়া হয়েছে
   const menuItems = [
     { 
       id: "overview", 
       label: "Overview", 
       route: "/dashboard",
       icon: <LuLayoutDashboard className="w-5 h-5" />
-    },
-    { 
-      id: "apply-opportunity", 
-      label: "Apply to Opportunity", 
-      route: "/dashboard/apply-opportunity",
-      icon: <LuSend className="w-5 h-5" />
     },
     { 
       id: "my-applications", 
@@ -38,6 +59,10 @@ export default function CollaboratorSidebar({ user }) {
       icon: <LuUser className="w-5 h-5" />
     },
   ];
+
+  // ডিসপ্লে নাম এবং ইমেজের জন্য ফলব্যাক নির্ধারণ
+  const displayName = dbProfile.name || user?.name || "Guest Collaborator";
+  const displayImage = dbProfile.image || user?.image || "";
 
   return (
     <>
@@ -67,7 +92,7 @@ export default function CollaboratorSidebar({ user }) {
         </button>
       </div>
 
-      {/* 💻 ক্লিন হোয়াইট সাইডবার (উইডথ w-72) */}
+      {/* 💻 ক্লিন হোয়াইট সাইডবার */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 w-72 bg-white text-slate-600 flex flex-col border-r border-slate-100 font-sans transition-transform duration-300 ease-in-out
         lg:translate-x-0 lg:static lg:h-screen
@@ -78,7 +103,7 @@ export default function CollaboratorSidebar({ user }) {
         <div className="p-5 border-b border-slate-50 flex flex-col items-start gap-3">
           <button 
             onClick={() => router.push("/")}
-            className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-[#4F46E5] transition bg-slate-50 hover:bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200"
+            className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-[#4F46E5] transition bg-slate-50 hover:bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 cursor-pointer"
           >
             <HiOutlineArrowLeft className="w-3 h-3 stroke-[2.5]" />
             <span>Back</span>
@@ -92,26 +117,26 @@ export default function CollaboratorSidebar({ user }) {
           </div>
         </div>
 
-        {/* 👤 ডাইনামিক ইউজার প্রোফাইল সেকশন (Better-Auth থেকে ডাটা রিসিভ করবে) */}
+        {/* 👤 ডাইনামিক ইউজার প্রোফাইল সেকশন (লাইভ ডাটাবেজ ইমেজ ও নাম দেখাবে) */}
         <div className="p-5 border-b border-slate-50 flex items-center gap-3">
-          {user?.image ? (
+          {displayImage ? (
             <img 
-              src={user.image} 
-              alt={user.name || "Collaborator Profile"} 
+              src={displayImage} 
+              alt={displayName} 
               className="h-10 w-10 rounded-full object-cover border border-slate-200 ring-2 ring-slate-100"
             />
           ) : (
             <div className="h-10 w-10 rounded-full bg-[#8B5CF6]/10 text-[#8B5CF6] font-bold flex items-center justify-center text-base border border-[#8B5CF6]/20">
-              {user?.name ? user.name.charAt(0).toUpperCase() : "C"}
+              {displayName.charAt(0).toUpperCase()}
             </div>
           )}
           
           <div className="flex flex-col items-start gap-0.5 max-w-[170px]">
             {/* ডাইনামিক নাম */}
             <span className="text-sm font-semibold text-slate-700 truncate w-full">
-              {user?.name || "Guest Collaborator"}
+              {displayName}
             </span>
-            {/* ডাইনামিক রোল (Collaborator থিম: Emerald Green) */}
+            {/* রোল */}
             <span className="px-2 py-0.5 text-[10px] font-medium bg-[#E6F4EA] text-[#137333] rounded-full border border-green-100 capitalize">
               {user?.role || "Collaborator"}
             </span>
