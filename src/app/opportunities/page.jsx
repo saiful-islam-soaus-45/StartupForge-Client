@@ -8,10 +8,10 @@ import { authClient } from "@/lib/auth-client"; // 🎯 আপনার প্�
 export default function BrowseOpportunities() {
   const [opportunities, setOpportunities] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   // 🎯 Better Auth সেশন হুক
   const { data: session } = authClient.useSession();
-  
+
   // 📧 ইমেইল স্টেট
   const [applicantEmail, setApplicantEmail] = useState("");
 
@@ -26,19 +26,19 @@ export default function BrowseOpportunities() {
   const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/opportunities")
-      .then((res) => res.json())
-      .then((resData) => {
-        if (resData.success) {
-          setOpportunities(resData.data);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
+  fetch("http://localhost:5000/api/opportunities")
+    .then((res) => res.json())
+    .then((resData) => {
+      if (resData.success) {
+        setOpportunities(resData.data);
+      }
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error(err);
+      setLoading(false);
+    });
+}, []);
 
   // 🎯 মডাল ওপেন হলে Better Auth সেশন থেকে ইমেইল সেট করার ইফেক্ট
   useEffect(() => {
@@ -69,6 +69,16 @@ export default function BrowseOpportunities() {
       setToastMessage("");
     }, 3050);
   };
+
+  const formatDate = (dateString) => {
+  if (!dateString) return "N/A";
+
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
 
   // 🎯 Apply Button Click Handler
   const openApplyModal = (opp) => {
@@ -106,7 +116,7 @@ export default function BrowseOpportunities() {
   // 🚀 Form Submit Action
   const handleSubmitApplication = async (e) => {
     e.preventDefault();
-    
+
     if (!applicantEmail.trim()) {
       alert("Applicant email is required!");
       return;
@@ -120,11 +130,13 @@ export default function BrowseOpportunities() {
 
     const applicationData = {
       opportunityId: selectedOpp._id,
+      startupId: selectedOpp.startupId,   // <-- এটা যোগ করো
       roleTitle: selectedOpp.roleTitle,
-      applicantEmail: applicantEmail,
-      motivationMessage: motivationMessage,
-      portfolioLink: portfolioLink,
-      appliedDate: new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }),
+      founderEmail: selectedOpp.founderEmail,
+      applicantEmail,
+      motivationMessage,
+      portfolioLink,
+      appliedDate: new Date(),
       status: "Pending"
     };
 
@@ -138,46 +150,49 @@ export default function BrowseOpportunities() {
       });
 
       const data = await res.json();
-      
-      if (data.success) {
+
+      if (res.ok && data.success) {
         closeApplyModal();
         showToast(`Successfully applied for ${selectedOpp.roleTitle}! 🎉`);
       } else {
-        alert(data.message || "Failed to apply.");
+        // Duplicate application
+        if (data.message === "You have already applied for this opportunity.") {
+          alert("❌ You have already applied for this opportunity.");
+        } else {
+          alert(data.message || "Failed to apply.");
+        }
       }
     } catch (error) {
-      console.error("Application submission error:", error);
-      alert("Something went wrong. Please try again.");
+      console.error(error);
+      alert("Something went wrong.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-  };
-
-  // 🎬 মোশন গাইডলাইন ভ্যারিয়েন্টস
   const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-      },
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
     },
-  };
+  },
+};
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 25 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" },
+  hidden: { opacity: 0, y: 25 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
     },
-  };
+  },
+};
 
   if (loading) {
     return (
@@ -191,7 +206,7 @@ export default function BrowseOpportunities() {
     <section className="relative w-full overflow-hidden bg-gradient-to-b from-indigo-50/40 via-white to-white py-16">
       <div className="absolute top-0 left-1/2 -z-10 h-[600px] w-[1000px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-indigo-200/20 to-purple-200/20 blur-[120px]" />
 
-      <motion.div 
+      <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -209,7 +224,7 @@ export default function BrowseOpportunities() {
 
         {/* Grid List */}
         {opportunities.length === 0 ? (
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="text-center py-24 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200"
           >
@@ -218,7 +233,7 @@ export default function BrowseOpportunities() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {opportunities.map((opp) => (
-              <motion.div 
+              <motion.div
                 key={opp._id}
                 variants={itemVariants}
                 className="group flex flex-col justify-between aspect-square rounded-2xl border border-slate-200/60 bg-slate-50/60 p-6 shadow-sm hover:shadow-xl hover:bg-white hover:border-indigo-100 transition-all duration-300 overflow-hidden"
@@ -237,9 +252,9 @@ export default function BrowseOpportunities() {
                     <h3 className="text-xl font-extrabold text-slate-900 capitalize tracking-tight group-hover:text-indigo-600 transition-colors duration-200 line-clamp-1">
                       {opp.roleTitle}
                     </h3>
-                    
+
                     <div className="w-6 h-[2px] bg-indigo-600/30 my-3 group-hover:w-12 transition-all duration-300 rounded-full" />
-                    
+
                     <div className="space-y-2 mt-4">
                       <div className="flex items-start gap-2 text-xs sm:text-sm text-slate-600 font-medium">
                         <FiCpu size={14} className="text-slate-400 shrink-0 mt-0.5" />
@@ -254,7 +269,7 @@ export default function BrowseOpportunities() {
                           <strong className="text-slate-700">Deadline:</strong> {opp.deadline}
                         </span>
                       </div>
-                      
+
                       <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 font-medium italic">
                         <FiClock size={14} className="text-slate-400 shrink-0" />
                         <span>Posted: {formatDate(opp.createdAt)}</span>
@@ -282,7 +297,7 @@ export default function BrowseOpportunities() {
       <AnimatePresence>
         {isModalOpen && selectedOpp && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -290,14 +305,14 @@ export default function BrowseOpportunities() {
               className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm"
             />
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.96, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 15 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="relative w-full max-w-md overflow-hidden rounded-3xl bg-white p-6 shadow-2xl border border-slate-100 z-10 space-y-4"
             >
-              <button 
+              <button
                 onClick={closeApplyModal}
                 className="absolute right-4 top-4 rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition"
               >
@@ -317,19 +332,18 @@ export default function BrowseOpportunities() {
                   <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1">
                     <FiMail size={12} className="text-slate-400" /> Applicant Email <span className="text-rose-500">*</span>
                   </label>
-                  
+
                   {/* 🔒 Better Auth থেকে ইমেইল পেলে ইনপুট লক হবে, না পেলে টাইপ করতে দেবে */}
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     placeholder="Enter your email address"
                     value={applicantEmail}
                     onChange={(e) => setApplicantEmail(e.target.value)}
-                    disabled={!!applicantEmail} 
-                    className={`w-full rounded-xl border px-3.5 py-2.5 text-sm font-medium shadow-sm outline-none transition ${
-                      applicantEmail 
-                        ? "bg-slate-50 text-slate-400 border-slate-200/80 cursor-not-allowed font-semibold" 
-                        : "bg-white text-slate-800 border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                    }`} 
+                    disabled={!!applicantEmail}
+                    className={`w-full rounded-xl border px-3.5 py-2.5 text-sm font-medium shadow-sm outline-none transition ${applicantEmail
+                      ? "bg-slate-50 text-slate-400 border-slate-200/80 cursor-not-allowed font-semibold"
+                      : "bg-white text-slate-800 border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                      }`}
                     required
                   />
                 </div>
@@ -339,8 +353,8 @@ export default function BrowseOpportunities() {
                   <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1">
                     <FiLink size={12} className="text-slate-400" /> Portfolio / GitHub Link
                   </label>
-                  <input 
-                    type="url" 
+                  <input
+                    type="url"
                     placeholder="https://yourportfolio.com"
                     value={portfolioLink}
                     onChange={(e) => setPortfolioLink(e.target.value)}
@@ -353,7 +367,7 @@ export default function BrowseOpportunities() {
                   <label className="block text-xs font-bold text-slate-700 mb-1.5">
                     Motivation Message <span className="text-rose-500">*</span>
                   </label>
-                  <textarea 
+                  <textarea
                     rows={4}
                     placeholder="Why do you want to join this project? What value can you bring?"
                     value={motivationMessage}
@@ -397,7 +411,7 @@ export default function BrowseOpportunities() {
       {/* 🔔 DYNAMIC TOAST NOTIFICATION */}
       <AnimatePresence>
         {toastMessage && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}

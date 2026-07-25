@@ -3,27 +3,33 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiCheckCircle, FiXCircle, FiClock, FiMail, FiUser, FiAlertCircle, FiCheck, FiLink, FiBriefcase } from "react-icons/fi";
+import { authClient } from "@/lib/auth-client";
 
 export default function ApplicationsPage() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState("");
+  const { data: session } = authClient.useSession();
 
   // 🔄 API থেকে অ্যাপ্লিকেশন ডেটা লোড করা
   useEffect(() => {
-    fetch("http://localhost:5000/api/applications")
-      .then((res) => res.json())
-      .then((resData) => {
-        if (resData.success) {
-          setApplications(resData.data);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching applications:", err);
-        setLoading(false);
-      });
-  }, []);
+  if (!session?.user?.email) return;
+
+  fetch(
+    `http://localhost:5000/api/applications?founderEmail=${session.user.email}`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        setApplications(data.data);
+      }
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error(err);
+      setLoading(false);
+    });
+}, [session]);
 
   // 🎯 স্ট্যাটাস আপডেট হ্যান্ডলার (Accepted / Rejected)
   const handleStatusUpdate = async (id, newStatus) => {

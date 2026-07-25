@@ -1,16 +1,21 @@
 "use client";
-
+import { useSession } from "@/lib/auth-client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  FiEdit2, FiTrash2, FiX, FiCheck, FiAlertCircle, 
-  FiBriefcase, FiCpu, FiClock, FiCalendar, FiLoader 
+import {
+  FiEdit2, FiTrash2, FiX, FiCheck, FiAlertCircle,
+  FiBriefcase, FiCpu, FiClock, FiCalendar, FiLoader
 } from "react-icons/fi";
 
 export default function ManageOpportunityPage() {
   const [opportunities, setOpportunities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+console.log(session?.user?.id);
   
+
   // 📝 Edit Modal States
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
@@ -24,24 +29,31 @@ export default function ManageOpportunityPage() {
 
   // 📥 ডাটাবেজ থেকে সব অপরচুনিটি ফেচ করার ফাংশন
   const fetchOpportunities = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch("http://localhost:5000/api/opportunities");
-      const data = await res.json();
-      if (data.success) {
-        setOpportunities(data.data);
-      }
-    } catch (error) {
-      console.error("Error fetching opportunities:", error);
-    } finally {
-      setIsLoading(false);
+  if (!userId) return;
+
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/opportunities/user/${userId}`
+    );
+
+    const data = await res.json();
+
+    if (data.success) {
+      setOpportunities(data.data);
     }
-  };
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   useEffect(() => {
+  if (userId) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchOpportunities();
-  }, []);
+  }
+}, [userId]);
 
   // 🗑️ কাস্টম মডাল ওপেন করার হ্যান্ডলার
   const openDeleteModal = (opp) => {
@@ -52,13 +64,13 @@ export default function ManageOpportunityPage() {
   // 💣 মঙ্গোডিবি থেকে ফাইনাল ডিলিট করার হ্যান্ডলার
   const handleConfirmDelete = async () => {
     if (!opportunityToDelete) return;
-    
+
     try {
       const res = await fetch(`http://localhost:5000/api/opportunities/${opportunityToDelete._id}`, {
         method: "DELETE",
       });
       const data = await res.json();
-      
+
       if (data.success) {
         setOpportunities(opportunities.filter((item) => item._id !== opportunityToDelete._id));
         showNotification("Opportunity deleted successfully!");
@@ -126,7 +138,7 @@ export default function ManageOpportunityPage() {
 
   return (
     <motion.div className="space-y-6" variants={containerVariants} initial="hidden" animate="show">
-      
+
       {/* 🚀 Header */}
       <motion.div className="border-b border-slate-100 pb-5" variants={itemVariants}>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">Manage Opportunity</h1>
@@ -136,7 +148,7 @@ export default function ManageOpportunityPage() {
       {/* 🔔 Toast Notification */}
       <AnimatePresence>
         {notification && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -180,7 +192,7 @@ export default function ManageOpportunityPage() {
                   </motion.tr>
                 ) : (
                   opportunities.map((opp) => (
-                    <motion.tr 
+                    <motion.tr
                       layout
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -193,9 +205,8 @@ export default function ManageOpportunityPage() {
                         <span className="max-w-[200px] truncate block text-slate-500 font-normal">{opp.requiredSkills}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                          opp.workType === "Remote" ? "bg-emerald-50 text-emerald-700" : "bg-blue-50 text-blue-700"
-                        }`}>
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${opp.workType === "Remote" ? "bg-emerald-50 text-emerald-700" : "bg-blue-50 text-blue-700"
+                          }`}>
                           {opp.workType}
                         </span>
                       </td>
@@ -294,17 +305,17 @@ export default function ManageOpportunityPage() {
       {/* 🗑️ [🎯 NEW] Huhuhi Image Layout: Custom Delete Confirmation Modal */}
       <AnimatePresence>
         {isDeleteModalOpen && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            exit={{ opacity: 0 }} 
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-sm"
           >
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }} 
-              animate={{ opacity: 1, scale: 1, y: 0 }} 
-              exit={{ opacity: 0, scale: 0.95, y: 15 }} 
-              transition={{ type: "spring", duration: 0.4 }} 
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: "spring", duration: 0.4 }}
               className="w-full max-w-[500px] rounded-3xl bg-white p-7 shadow-2xl border border-slate-100"
             >
               {/* Header Icon & Title */}
@@ -321,22 +332,22 @@ export default function ManageOpportunityPage() {
 
               {/* Description Body */}
               <p className="text-[15px] leading-relaxed text-slate-500 font-normal mb-8">
-                Are you absolutely sure you want to delete this opportunity role (<span className="font-semibold text-slate-700">{opportunityToDelete?.roleTitle}</span>)? 
+                Are you absolutely sure you want to delete this opportunity role (<span className="font-semibold text-slate-700">{opportunityToDelete?.roleTitle}</span>)?
                 This action cannot be undone and all data will be permanently removed.
               </p>
 
               {/* Action Buttons */}
               <div className="grid grid-cols-2 gap-4">
-                <button 
-                  type="button" 
-                  onClick={() => setIsDeleteModalOpen(false)} 
+                <button
+                  type="button"
+                  onClick={() => setIsDeleteModalOpen(false)}
                   className="w-full rounded-2xl border border-slate-300 py-3.5 text-base font-semibold text-slate-700 hover:bg-slate-50 transition active:scale-[0.98] outline-none"
                 >
                   Cancel
                 </button>
-                <button 
-                  type="button" 
-                  onClick={handleConfirmDelete} 
+                <button
+                  type="button"
+                  onClick={handleConfirmDelete}
                   className="w-full rounded-2xl bg-[#e10042] py-3.5 text-base font-semibold text-white hover:bg-[#c20037] transition shadow-lg shadow-rose-100 active:scale-[0.98] outline-none"
                 >
                   Yes, Delete

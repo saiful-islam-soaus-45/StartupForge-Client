@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiUploadCloud, FiCheck, FiX } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
+import { motion } from "framer-motion";
 import { authClient } from "@/lib/auth-client"; // আপনার Better-Auth ক্লায়েন্ট পাথ
 
 export default function SignupPage() {
@@ -86,7 +87,7 @@ export default function SignupPage() {
                 password,
                 name,
                 image: imageUrl || undefined,
-                role: role, // ⚡ ফিক্স: Better-Auth এ কাস্টম এডিশনাল ফিল্ড এভাবে সরাসরি পাস করতে হয়
+                role: role, // ⚡ ফিক্স: Better-Auth এ কাস্টম এডিশনাল ফিল্ড এভাবে সরাসরি পাস করতে হয়
                 callbackURL: "/", // সফল হলে হোম পেজে রিডাইরেক্ট হবে
             }, {
                 onRequest: () => setIsLoading(true),
@@ -108,13 +109,25 @@ export default function SignupPage() {
 
     return (
         <div className="flex min-h-[90vh] items-center justify-center bg-slate-50/50 px-4 py-8">
-            <div className="w-full max-w-[400px] rounded-2xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-100/50">
+            {/* ফ্রেমার মোশন দিয়ে সাইনআপ কার্ড অ্যানিমেশন */}
+            <motion.div
+                initial={{ opacity: 0, y: 25, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -25, scale: 0.97 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="w-full max-w-[400px] rounded-2xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-100/50"
+            >
 
                 {/* লোগো ও হেডার */}
                 <div className="flex flex-col items-center text-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 shadow-sm">
+                    <motion.div 
+                        initial={{ scale: 0.5 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.1, type: "spring", stiffness: 260, damping: 20 }}
+                        className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 shadow-sm"
+                    >
                         <span className="text-base text-white font-bold">⚡</span>
-                    </div>
+                    </motion.div>
                     <h2 className="mt-2.5 text-xs font-bold text-slate-800 tracking-tight flex items-center gap-1">
                         <span className="text-slate-900">⚡ Startup</span>
                         <span className="text-indigo-600">Forge</span>
@@ -128,9 +141,13 @@ export default function SignupPage() {
                 </div>
 
                 {errorMsg && (
-                    <div className="mt-3 rounded-lg bg-red-50 p-2 text-center text-xs font-medium text-red-600 border border-red-100">
+                    <motion.div 
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        className="mt-3 rounded-lg bg-red-50 p-2 text-center text-xs font-medium text-red-600 border border-red-100"
+                    >
                         {errorMsg}
-                    </div>
+                    </motion.div>
                 )}
 
                 {/* ডিভাইডার */}
@@ -281,7 +298,9 @@ export default function SignupPage() {
 
                     {/* সাবমিট বাটন */}
                     <div className="pt-1">
-                        <button
+                        <motion.button
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.98 }}
                             type="submit"
                             disabled={isLoading || isUploading}
                             className="flex w-full justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 py-2.5 text-xs font-semibold text-white shadow-md hover:opacity-95 disabled:opacity-70 transition-all"
@@ -297,9 +316,11 @@ export default function SignupPage() {
                             ) : (
                                 "Sign up"
                             )}
-                        </button>
+                        </motion.button>
                         <div className="mt-4">
-                            <button
+                            <motion.button
+                                whileHover={{ scale: 1.01 }}
+                                whileTap={{ scale: 0.98 }}
                                 type="button"
                                 onClick={async () => {
                                     await authClient.signIn.social({ provider: "google", callbackURL: "/" });
@@ -308,7 +329,7 @@ export default function SignupPage() {
                             >
                                 <FcGoogle size={16} />
                                 Sign up with Google
-                            </button>
+                            </motion.button>
                         </div>
                     </div>
                 </form>
@@ -319,7 +340,7 @@ export default function SignupPage() {
                         Sign in
                     </Link>
                 </p>
-            </div>
+            </motion.div>
         </div>
     );
 }

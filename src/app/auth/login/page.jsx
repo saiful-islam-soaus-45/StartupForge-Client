@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
+import { motion } from "framer-motion";
 import { authClient } from "@/lib/auth-client"; // আপনার Better-Auth ক্লায়েন্ট পাথ
 
 export default function LoginPage() {
@@ -17,10 +18,10 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  // ১. ইউজার অন্য কোনো পেজ থেকে রিডাইরেক্ট হয়ে আসলে সেই পেজ, নতুবা ডিফল্ট হোমপেজে ('/') রিডাইরেক্ট করবে
+  // ১. ইউজার অন্য কোনো পেজ থেকে রিডাইরেক্ট হয়ে আসলে সেই পেজ, নতুবা ডিফল্ট হোমপেজে ('/') রিডাইরেক্ট করবে
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
-  // ২. Credential (ইমেইল ও পাসওয়ার্ড) লগইন হ্যান্ডলার
+  // ২. Credential (ইমেইল ও পাসওয়ার্ড) লগইন হ্যান্ডলার
   const handleCredentialLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -63,14 +64,25 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-[85vh] items-center justify-center bg-slate-50/50 px-4 py-8">
-      {/* সাইনআপ কার্ডের মতোই কম্প্যাক্ট সাইজ max-w-[400px] */}
-      <div className="w-full max-w-[400px] rounded-2xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-100/50">
+      {/* ফ্রেমার মোশন দিয়ে কার্ড অ্যানিমেশন */}
+      <motion.div
+        initial={{ opacity: 0, y: 25, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -25, scale: 0.97 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="w-full max-w-[400px] rounded-2xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-100/50"
+      >
         
         {/* লোগো ও হেডার */}
         <div className="flex flex-col items-center text-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 shadow-sm">
+          <motion.div 
+            initial={{ scale: 0.5 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.1, type: "spring", stiffness: 260, damping: 20 }}
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 shadow-sm"
+          >
             <span className="text-base text-white font-bold">⚡</span>
-          </div>
+          </motion.div>
           <h2 className="mt-2.5 text-xs font-bold text-slate-800 tracking-tight flex items-center gap-1">
             <span className="text-slate-900">⚡ Startup</span>
             <span className="text-indigo-600">Forge</span>
@@ -85,12 +97,14 @@ export default function LoginPage() {
 
         {/* এরর মেসেজ */}
         {errorMsg && (
-          <div className="mt-3 rounded-lg bg-red-50 p-2 text-center text-xs font-medium text-red-600 border border-red-100">
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            className="mt-3 rounded-lg bg-red-50 p-2 text-center text-xs font-medium text-red-600 border border-red-100"
+          >
             {errorMsg}
-          </div>
+          </motion.div>
         )}
-
-        
 
         {/* ডিভাইডার */}
         <div className="relative my-4">
@@ -123,7 +137,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* পাসওয়ার্ড ফিল্ড */}
+          {/* পাসওয়ার্ড ফিল্ড */}
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="block text-xs font-semibold text-slate-700">Password</label>
@@ -155,7 +169,9 @@ export default function LoginPage() {
 
           {/* সাবমিট বাটন */}
           <div className="pt-1">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={isLoading}
               className="flex w-full justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 py-2.5 text-xs font-semibold text-white shadow-md hover:opacity-95 disabled:opacity-70 transition-all"
@@ -171,18 +187,21 @@ export default function LoginPage() {
               ) : (
                 "Sign in"
               )}
-            </button>
-            {/* Google দিয়ে ওয়ান-ক্লিক সাইনইন */}
-        <div className="mt-4">
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition"
-          >
-            <FcGoogle size={16} />
-            Continue with Google
-          </button>
-        </div>
+            </motion.button>
+            
+            {/* Google দিয়ে ওয়ান-ক্লিক সাইনইন */}
+            <div className="mt-4">
+              <motion.button
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                type="button"
+                onClick={handleGoogleLogin}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition"
+              >
+                <FcGoogle size={16} />
+                Continue with Google
+              </motion.button>
+            </div>
           </div>
         </form>
 
@@ -194,7 +213,7 @@ export default function LoginPage() {
           </Link>
         </p>
 
-      </div>
+      </motion.div>
     </div>
   );
 }
