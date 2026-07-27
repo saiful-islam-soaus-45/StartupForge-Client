@@ -4,16 +4,25 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FiArrowRight, FiMail, FiCalendar } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
+import { authClient } from "@/lib/auth-client";
 
 export default function BrowseStartups() {
   const [startups, setStartups] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { data: session } = authClient.useSession();
+
   useEffect(() => {
     const fetchStartups = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/public/startups");
+        const email = session?.user?.email || "";
+
+        const res = await fetch(
+          `http://localhost:5000/api/public/startups?email=${email}`
+        );
+
         const resData = await res.json();
+
         if (resData.success) {
           setStartups(resData.data);
         }
@@ -23,8 +32,9 @@ export default function BrowseStartups() {
         setLoading(false);
       }
     };
+
     fetchStartups();
-  }, []);
+  }, [session]);
 
   // 🗓️ ISO Date-কে সুন্দর ফরম্যাটে দেখানোর ফাংশন
   const formatDate = (dateString) => {
@@ -90,7 +100,7 @@ export default function BrowseStartups() {
 
           <AnimatePresence mode="wait">
             {startups.length === 0 ? (
-              <motion.div 
+              <motion.div
                 variants={itemVariants}
                 className="text-center py-24 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200 backdrop-blur-[1px]"
               >
@@ -122,10 +132,20 @@ export default function BrowseStartups() {
                       </div>
 
                       {/* Startup Name */}
+                      {/* Startup Name */}
                       <div className="mt-2">
                         <h3 className="text-xl font-extrabold text-slate-900 capitalize tracking-tight group-hover:text-indigo-600 transition-colors duration-200 line-clamp-1">
                           {startup.name}
                         </h3>
+
+                        {startup.status === "pending" &&
+                          session?.user?.email === startup.founderEmail && (
+                            <div className="mt-2">
+                              <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1 text-xs font-semibold">
+                                ⏳ Pending Approval
+                              </span>
+                            </div>
+                          )}
 
                         {/* Subtle Separator */}
                         <div className="w-6 h-[2px] bg-indigo-600/30 my-3 group-hover:w-12 transition-all duration-300 rounded-full" />
