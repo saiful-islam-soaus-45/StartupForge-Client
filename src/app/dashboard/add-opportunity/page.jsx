@@ -180,7 +180,7 @@ export default function AddOpportunityPage() {
               href="/pricing"
               className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-3 text-xs font-bold text-white shadow-md shadow-orange-500/20 hover:opacity-95 transition cursor-pointer"
             >
-              Upgrade — $9.99
+              Upgrade — $14/month
             </Link>
           </div>
         </motion.div>

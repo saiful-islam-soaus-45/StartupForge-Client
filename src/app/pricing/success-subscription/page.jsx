@@ -93,7 +93,7 @@ export default async function Success({ searchParams }) {
           {/* Action Buttons */}
           <div className="mt-5 space-y-2">
             <Link
-              href="/dashboard"
+              href="/dashboard/add-opportunity"
               className="flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 py-2.5 text-xs font-semibold text-white shadow-md shadow-indigo-200 hover:opacity-95 transition"
             >
               Go to Dashboard

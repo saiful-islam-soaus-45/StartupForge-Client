@@ -31,7 +31,7 @@ export default function PricingPage() {
                 {/* প্রাইসিং কার্ড */}
                 <div className="mt-6 rounded-2xl border border-slate-100 bg-slate-50/60 p-6 text-center">
                     <div className="flex items-baseline justify-center gap-1">
-                        <span className="text-3xl font-black text-slate-900">$15</span>
+                        <span className="text-3xl font-black text-slate-900">$14</span>
                         <span className="text-xs font-semibold text-slate-400">/ month</span>
                     </div>
 
