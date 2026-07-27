@@ -72,7 +72,7 @@ export default function Banner() {
             className="mt-10 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
           >
             <Link
-              href="/register"
+              href="/dashboard/my-startup"
               className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-indigo-100 hover:opacity-95 hover:shadow-xl transition-all duration-200"
             >
               Start Building
