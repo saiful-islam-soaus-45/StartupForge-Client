@@ -15,6 +15,7 @@ export default function CollaboratorSidebar({ user }) {
   const [dbProfile, setDbProfile] = useState({ name: "", image: "" });
   const userEmail = user?.email || "soausahmedbd91@gmail.com";
 
+  
   // ডাটাবেজ থেকে লাইভ প্রোফাইল ডাটা লোড করা
   useEffect(() => {
     if (!userEmail) return;

@@ -26,19 +26,19 @@ export default function BrowseOpportunities() {
   const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
-  fetch("http://localhost:5000/api/opportunities")
-    .then((res) => res.json())
-    .then((resData) => {
-      if (resData.success) {
-        setOpportunities(resData.data);
-      }
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.error(err);
-      setLoading(false);
-    });
-}, []);
+    fetch("http://localhost:5000/api/opportunities")
+      .then((res) => res.json())
+      .then((resData) => {
+        if (resData.success) {
+          setOpportunities(resData.data);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
 
   // 🎯 মডাল ওপেন হলে Better Auth সেশন থেকে ইমেইল সেট করার ইফেক্ট
   useEffect(() => {
@@ -71,38 +71,30 @@ export default function BrowseOpportunities() {
   };
 
   const formatDate = (dateString) => {
-  if (!dateString) return "N/A";
+    if (!dateString) return "N/A";
 
-  return new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
 
   // 🎯 Apply Button Click Handler
-  const openApplyModal = (opp) => {
-    // Better Auth সেশন অথবা লোকাল স্টোরেজ থেকে রোল চেক
-    let role = session?.user?.role;
-    if (!role) {
-      try {
-        const userData = localStorage.getItem("user");
-        if (userData) {
-          const parsed = JSON.parse(userData);
-          role = parsed?.role || parsed?.user?.role;
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
+ const openApplyModal = (opp) => {
+  const role = session?.user?.role?.toLowerCase();
 
-    if (role === "founder") {
-      alert("As a Founder, you cannot apply for opportunities!");
-      return;
-    }
-    setSelectedOpp(opp);
-    setIsModalOpen(true);
-  };
+  console.log("ROLE =", role);
+
+  if (role === "founder") {
+    alert("Founder cannot apply!");
+    return;
+  }
+
+  // Modal সরাসরি ওপেন হবে
+  setSelectedOpp(opp);
+  setIsModalOpen(true);
+};
 
   // ❌ Close Modal Function
   const closeApplyModal = () => {
@@ -171,28 +163,28 @@ export default function BrowseOpportunities() {
   };
 
   const containerVariants = {
-  hidden: {
-    opacity: 0,
-  },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
+    hidden: {
+      opacity: 0,
     },
-  },
-};
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+      },
+    },
+  };
 
   const itemVariants = {
-  hidden: { opacity: 0, y: 25 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut",
+    hidden: { opacity: 0, y: 25 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
     },
-  },
-};
+  };
 
   if (loading) {
     return (

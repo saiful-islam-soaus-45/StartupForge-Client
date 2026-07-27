@@ -17,15 +17,43 @@ export const auth = betterAuth({
     additionalFields: {
       role: {
         type: "string",
-        required: true,      // রোল ম্যান্ডেটরি করা হলো
-        input: true,         // ফ্রন্টএন্ড থেকে ইনপুট নেওয়ার অনুমতি
+        required: true,
+        input: true,
       },
       plan: {
         type: "string",
         required: true,
-        defaultValue: "free", // সাইনআপের সময় স্বয়ংক্রিয়ভাবে "free" সেভ হবে
-        input: false,         // ফ্রন্টএন্ড থেকে ইউজার সরাসরি এটি বদলাতে পারবে না
+        defaultValue: "free",
+        input: false,
+      },
+
+      status: {
+        type: "string",
+        defaultValue: "active",
+        input: false,
       },
     },
   },
+  hooks: {
+  before: async (ctx) => {
+
+    if (ctx.path.includes("/sign-in")) {
+
+      const email = ctx.body?.email;
+
+      const user = await db
+        .collection("user")
+        .findOne({ email });
+
+      if (user?.status === "blocked") {
+        throw new Error(
+          "Your account has been blocked."
+        );
+      }
+
+    }
+
+    return ctx;
+  },
+},
 });

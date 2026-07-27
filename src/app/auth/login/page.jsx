@@ -23,32 +23,53 @@ export default function LoginPage() {
 
   // ২. Credential (ইমেইল ও পাসওয়ার্ড) লগইন হ্যান্ডলার
   const handleCredentialLogin = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setErrorMsg("");
+  e.preventDefault();
+  setIsLoading(true);
+  setErrorMsg("");
 
-    try {
-      await authClient.signIn.email({
+  try {
+    // ✅ আগে check করবে user blocked কিনা
+    const check = await fetch(
+      `http://localhost:5000/api/auth/check-user-status?email=${email}`
+    );
+
+    const result = await check.json();
+
+    if (result.blocked) {
+      setIsLoading(false);
+      setErrorMsg("Your account has been blocked.");
+      return;
+    }
+
+    // ✅ Blocked না হলে login করবে
+    await authClient.signIn.email(
+      {
         email,
         password,
         callbackURL: callbackUrl,
-      }, {
+      },
+      {
         onRequest: () => setIsLoading(true),
+
         onSuccess: () => {
           setIsLoading(false);
           router.push(callbackUrl);
           router.refresh();
         },
+
         onError: (ctx) => {
           setIsLoading(false);
-          setErrorMsg(ctx.error.message || "Invalid email or password.");
-        }
-      });
-    } catch (err) {
-      setIsLoading(false);
-      setErrorMsg("An unexpected error occurred. Please try again.");
-    }
-  };
+          setErrorMsg(
+            ctx.error.message || "Invalid email or password."
+          );
+        },
+      }
+    );
+  } catch (err) {
+    setIsLoading(false);
+    setErrorMsg("An unexpected error occurred. Please try again.");
+  }
+};
 
   // ৩. গুগল সোশ্যাল লগইন হ্যান্ডলার
   const handleGoogleLogin = async () => {

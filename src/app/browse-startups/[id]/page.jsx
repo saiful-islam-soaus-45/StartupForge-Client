@@ -13,6 +13,19 @@ export default function StartupDetails({ user }) {
   // 🎯 Better Auth সেশন হুক
   const { data: session, isPending } = authClient.useSession();
 
+  const openApplyModal = () => {
+  const role = session?.user?.role?.toLowerCase();
+
+  console.log("ROLE =", role);
+
+  if (role === "founder") {
+    alert("Founder cannot apply to startups.");
+    return;
+  }
+
+  setIsModalOpen(true);
+};
+
   const [startup, setStartup] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -236,7 +249,7 @@ export default function StartupDetails({ user }) {
             <motion.button 
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
-              onClick={() => setIsModalOpen(true)}
+              onClick={openApplyModal}
               className="w-full sm:w-auto rounded-2xl bg-indigo-600 px-8 py-4 text-sm font-bold text-white hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-100 transition-all duration-200 shadow-sm cursor-pointer"
             >
               Apply Now

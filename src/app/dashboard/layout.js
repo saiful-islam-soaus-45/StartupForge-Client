@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import FounderSidebar from "@/components/dashboard/FounderSidebar";
 import CollaboratorSidebar from "@/components/dashboard/CollaboratorSidebar"; // Collaborator সাইডবার ইমপোর্ট
+import AdminSidebar from "@/components/dashboard/AdminSidebar";
 
 export default async function DashboardLayout({ children }) {
   const session = await auth.api.getSession({
@@ -23,17 +24,18 @@ export default async function DashboardLayout({ children }) {
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-slate-50/50">
       {/* 🔄 রোল অনুযায়ী ডাইনামিক সাইডবার রেন্ডারিং */}
-      {loggedInUser.role === "collaborator" ? (
-        <CollaboratorSidebar user={loggedInUser} />
+      {/* 🔄 রোল অনুযায়ী ডাইনামিক সাইডবার */}
+      {loggedInUser.role === "admin" ? (
+        <AdminSidebar user={session.user} />
+      ) : loggedInUser.role === "collaborator" ? (
+        <CollaboratorSidebar user={session.user} />
       ) : (
-        <FounderSidebar user={loggedInUser} />
+        <FounderSidebar user={session.user} />
       )}
-      
+
       {/* ডান পাশে মেইন কメント এরিয়া */}
       <main className="flex-1 p-6 lg:p-10 overflow-x-auto">
-        <div className="w-full max-w-7xl mx-auto">
-          {children}
-        </div>
+        <div className="w-full max-w-7xl mx-auto">{children}</div>
       </main>
     </div>
   );

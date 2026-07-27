@@ -3,29 +3,45 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LuLayers } from "react-icons/lu";
+import { authClient } from "@/lib/auth-client";
 
-export default function MyApplicationsPage({ user }) {
+export default function MyApplicationsPage() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { data: session } = authClient.useSession();
+  const targetEmail = session?.user?.email;
+
+  console.log("SESSION =", session);
+  console.log("USER =", session?.user);
+  console.log("TARGET EMAIL =", targetEmail);
+
   useEffect(() => {
-    // 🎯 ইউজার সেশন ইমেইল ট্র্যাকিং (কোলাবোরেটর বা ফাউন্ডার যেই হোক)
-    const targetEmail = user?.email || user?.applicantEmail || "soausahmedbd91@gmail.com";
+    if (!targetEmail) return;
+
+    console.log("SESSION =", session);
+    console.log("TARGET EMAIL =", targetEmail);
 
     const fetchApplications = async () => {
       try {
         setLoading(true);
         setError(null);
-        
-        const res = await fetch(`http://localhost:5000/api/applications/${targetEmail}`);
-        if (!res.ok) throw new Error("Failed to fetch applications from server");
-        
+
+        const res = await fetch(
+          `http://localhost:5000/api/applications?applicantEmail=${targetEmail}`
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch applications");
+        }
+
         const data = await res.json();
+
         if (data.success) {
           setApplications(data.data || []);
         } else {
-          throw new Error(data.message || "Something went wrong");
+          throw new Error(data.message);
         }
       } catch (err) {
         setError(err.message);
@@ -34,10 +50,9 @@ export default function MyApplicationsPage({ user }) {
       }
     };
 
-    if (targetEmail) {
-      fetchApplications();
-    }
-  }, [user?.email, user?.applicantEmail]);
+    fetchApplications();
+
+  }, [targetEmail]);
 
   const getStatusClass = (status) => {
     switch (status?.toLowerCase()) {
@@ -87,7 +102,7 @@ export default function MyApplicationsPage({ user }) {
       <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden w-full">
         <AnimatePresence mode="wait">
           {!applications || applications.length === 0 ? (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -113,22 +128,36 @@ export default function MyApplicationsPage({ user }) {
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-600">
                   {applications.map((app) => {
                     // 🔍 পপুলেটেড অবজেক্ট বা র ডেটা স্ট্রাকচার সেফলি রেন্ডার করা হচ্ছে
-                    const roleName = app.roleTitle || app.opportunityDetails?.roleTitle || app.opportunityId?.roleTitle;
-                    const startupName = app.startupDetails?.name || app.startupId?.name || "Direct Application";
-                    const startupLogo = app.startupDetails?.logo || app.startupId?.logo;
-                    const applicant = app.applicantEmail || "Unknown Applicant";
+                    const roleName =
+                      app.roleTitle ||
+                      app.opportunityDetails?.roleTitle ||
+                      app.opportunityId?.roleTitle ||
+                      null;
+
+                    const startupName =
+                      app.startupDetails?.name ||
+                      app.startupId?.name ||
+                      app.startupName ||
+                      "Unknown Startup";
+
+                    const startupLogo =
+                      app.startupDetails?.logo ||
+                      app.startupId?.logo ||
+                      app.startupLogo ||
+                      "";
+
+                    const applicant =
+                      app.applicantEmail || "Unknown Applicant";
 
                     return (
                       <tr key={app._id} className="hover:bg-slate-50/30 transition-colors">
-                        
+
                         {/* ১. Opportunity Role */}
                         <td className="py-4 px-6 font-semibold text-slate-800 align-middle">
                           {roleName ? (
                             <span className="capitalize">{roleName}</span>
                           ) : (
-                            <span className="text-slate-400 font-normal italic text-xs bg-slate-50 border border-slate-200/60 px-2 py-0.5 rounded-md">
-                              Direct Startup Apply
-                            </span>
+                            <span className="text-slate-400">-</span>
                           )}
                         </td>
 
