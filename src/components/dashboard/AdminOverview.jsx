@@ -7,6 +7,15 @@ import {
   FiTrendingUp,
   FiDollarSign,
 } from "react-icons/fi";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
 import { motion } from "framer-motion";
 
 export default function AdminOverview() {
@@ -20,7 +29,9 @@ export default function AdminOverview() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/admin/overview");
+        const res = await fetch(
+          "http://localhost:5000/api/admin/overview"
+        );
         const data = await res.json();
 
         if (data.success) {
@@ -58,10 +69,31 @@ export default function AdminOverview() {
     },
     {
       title: "Total Revenue",
-      value: `$${stats.revenue}`,
+      value: `$${Number(stats.revenue).toFixed(2)}`,
       icon: FiDollarSign,
       color: "text-orange-600",
       bg: "bg-orange-50",
+    },
+
+
+  ];
+
+  const chartData = [
+    {
+      name: "Users",
+      value: stats.users,
+    },
+    {
+      name: "Startups",
+      value: stats.startups,
+    },
+    {
+      name: "Opportunities",
+      value: stats.opportunities,
+    },
+    {
+      name: "Revenue",
+      value: stats.revenue,
     },
   ];
 
@@ -111,6 +143,39 @@ export default function AdminOverview() {
             </motion.div>
           );
         })}
+      </div>
+
+      {/* Charts & Statistics */}
+      <div>
+        <h2 className="text-2xl font-bold text-slate-800">
+          Platform Performance Overview
+        </h2>
+
+        <p className="text-slate-500 mt-2">
+          Track key metrics and monitor overall platform performance.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm h-[450px] ">
+
+
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+
+            <XAxis dataKey="name" />
+
+            <YAxis />
+
+            <Tooltip />
+
+            <Bar
+              dataKey="value"
+              radius={[8, 8, 0, 0]}
+              fill="#4F46E5"
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </motion.div>
   );

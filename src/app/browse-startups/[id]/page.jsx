@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { FiArrowLeft, FiMail, FiCalendar, FiTrendingUp, FiCheck, FiX } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { authClient } from "@/lib/auth-client"; // 🎯 আপনার প্রজেক্টের Better Auth ক্লায়েন্ট পাথটি এখানে ঠিক করে নিন
+import toast from "react-hot-toast";
 
 export default function StartupDetails({ user }) {
   const { id } = useParams();
@@ -13,16 +14,29 @@ export default function StartupDetails({ user }) {
   // 🎯 Better Auth সেশন হুক
   const { data: session, isPending } = authClient.useSession();
 
-  const openApplyModal = () => {
+const openApplyModal = (opp) => {
   const role = session?.user?.role?.toLowerCase();
 
-  console.log("ROLE =", role);
+  if (role !== "collaborator") {
+    toast.error("Only collaborators can apply for startups.", {
+      position: "top-center",
+      duration: 3000,
+      icon: "🚫",
+      style: {
+        borderRadius: "14px",
+        background: "#0f172a",
+        color: "#fff",
+        border: "1px solid #334155",
+        padding: "14px 18px",
+        fontWeight: "600",
+      },
+    });
 
-  if (role === "founder") {
-    alert("Founder cannot apply to startups.");
-    return;
+    return; // ❌ Modal open হবে না
   }
 
+  // ✅ শুধু Collaborator হলে
+  // setSelectedOpp(opp);
   setIsModalOpen(true);
 };
 

@@ -54,19 +54,28 @@ export default function ManageUsersPage() {
 
     if (loading) {
         return (
-            <div className="text-center py-20 text-slate-500">
+            <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                className="text-center py-20 text-slate-500"
+            >
                 Loading users...
-            </div>
+            </motion.div>
         );
     }
 
     return (
         <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
             className="space-y-8"
         >
-            <div>
+            <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+            >
                 <h1 className="text-3xl font-bold text-slate-900">
                     Manage Users
                 </h1>
@@ -74,9 +83,14 @@ export default function ManageUsersPage() {
                 <p className="text-slate-500 mt-2">
                     View, Block and Unblock platform users.
                 </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-x-auto">
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.99 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+                className="bg-white rounded-2xl border border-slate-200 overflow-x-auto shadow-sm"
+            >
                 <table className="min-w-[750px] w-full">
                     <thead className="bg-slate-50">
                         <tr className="text-left text-sm text-slate-600">
@@ -89,10 +103,13 @@ export default function ManageUsersPage() {
                     </thead>
 
                     <tbody>
-                        {users.map((user) => (
-                            <tr
+                        {users.map((user, index) => (
+                            <motion.tr
                                 key={user._id}
-                                className="border-t hover:bg-slate-50"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.2, delay: index * 0.04 }}
+                                className="border-t hover:bg-slate-50 transition-colors"
                             >
                                 <td className="px-6 py-4 font-medium">
                                     {user.name}
@@ -119,26 +136,30 @@ export default function ManageUsersPage() {
 
                                 <td className="px-6 py-4 text-center whitespace-nowrap">
                                     {user.status === "blocked" ? (
-                                        <button
+                                        <motion.button
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
                                             onClick={() => handleStatus(user._id, "active")}
-                                            className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white text-sm font-medium cursor-pointer"
+                                            className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white text-sm font-medium cursor-pointer transition shadow-sm"
                                         >
                                             Unblock
-                                        </button>
+                                        </motion.button>
                                     ) : (
-                                        <button
+                                        <motion.button
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
                                             onClick={() => handleStatus(user._id, "blocked")}
-                                            className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium cursor-pointer"
+                                            className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium cursor-pointer transition shadow-sm"
                                         >
                                             Block
-                                        </button>
+                                        </motion.button>
                                     )}
                                 </td>
-                            </tr>
+                            </motion.tr>
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </motion.div>
         </motion.div>
     );
 }

@@ -1,8 +1,9 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+
 import FounderSidebar from "@/components/dashboard/FounderSidebar";
-import CollaboratorSidebar from "@/components/dashboard/CollaboratorSidebar"; // Collaborator সাইডবার ইমপোর্ট
+import CollaboratorSidebar from "@/components/dashboard/CollaboratorSidebar";
 import AdminSidebar from "@/components/dashboard/AdminSidebar";
 
 export default async function DashboardLayout({ children }) {
@@ -14,29 +15,49 @@ export default async function DashboardLayout({ children }) {
     redirect("/auth/login");
   }
 
-  // Better-Auth থেকে লাইভ ইউজার ডেটা ও রোল নেওয়া হচ্ছে
   const loggedInUser = {
     name: session.user.name,
     image: session.user.image,
-    role: session.user.role?.toLowerCase() || "founder", // lowercase করে নেওয়া সেফ
+    email: session.user.email,
+    role: session.user.role?.toLowerCase() || "founder",
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-slate-50/50">
-      {/* 🔄 রোল অনুযায়ী ডাইনামিক সাইডবার রেন্ডারিং */}
-      {/* 🔄 রোল অনুযায়ী ডাইনামিক সাইডবার */}
-      {loggedInUser.role === "admin" ? (
-        <AdminSidebar user={session.user} />
-      ) : loggedInUser.role === "collaborator" ? (
-        <CollaboratorSidebar user={session.user} />
-      ) : (
-        <FounderSidebar user={session.user} />
-      )}
+    <div className="min-h-screen bg-slate-50">
+      {/* ================= Mobile Sidebar ================= */}
+      <div className="lg:hidden">
+        {loggedInUser.role === "admin" ? (
+          <AdminSidebar user={loggedInUser} />
+        ) : loggedInUser.role === "collaborator" ? (
+          <CollaboratorSidebar user={loggedInUser} />
+        ) : (
+          <FounderSidebar user={loggedInUser} />
+        )}
+      </div>
 
-      {/* ডান পাশে মেইন কメント এরিয়া */}
-      <main className="flex-1 p-6 lg:p-10 overflow-x-auto">
-        <div className="w-full max-w-7xl mx-auto">{children}</div>
-      </main>
+      {/* ================= Desktop Layout ================= */}
+      <div className="flex">
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:block w-72 shrink-0">
+          {loggedInUser.role === "admin" ? (
+            <AdminSidebar user={loggedInUser} />
+          ) : loggedInUser.role === "collaborator" ? (
+            <CollaboratorSidebar user={loggedInUser} />
+          ) : (
+            <FounderSidebar user={loggedInUser} />
+          )}
+        </div>
+
+        {/* Main Content */}
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-10">
+          {/* Horizontal Scroll Support */}
+          <div className="w-full overflow-x-auto">
+            <div className="mx-auto w-full max-w-7xl">
+              {children}
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

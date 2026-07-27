@@ -13,33 +13,33 @@ export default function FounderSidebar({ user }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { 
-      id: "overview", 
-      label: "Overview", 
+    {
+      id: "overview",
+      label: "Overview",
       route: "/dashboard",
       icon: <LuLayoutDashboard className="w-5 h-5" />
     },
-    { 
-      id: "my-startup", 
-      label: "My Startup", 
+    {
+      id: "my-startup",
+      label: "My Startup",
       route: "/dashboard/my-startup",
       icon: <LuRocket className="w-5 h-5" />
     },
-    { 
-      id: "add-opportunity", 
-      label: "Add Opportunity", 
+    {
+      id: "add-opportunity",
+      label: "Add Opportunity",
       route: "/dashboard/add-opportunity",
       icon: <LuCirclePlus className="w-5 h-5" />
     },
-    { 
-      id: "manage-opportunities", 
-      label: "Manage Opportunities", 
+    {
+      id: "manage-opportunities",
+      label: "Manage Opportunities",
       route: "/dashboard/manage-opportunity",
       icon: <HiOutlineQueueList className="w-5 h-5" />
     },
-    { 
-      id: "applications", 
-      label: "Applications", 
+    {
+      id: "applications",
+      label: "Applications",
       route: "/dashboard/applications",
       icon: <HiOutlineDocumentText className="w-5 h-5" />
     },
@@ -50,7 +50,7 @@ export default function FounderSidebar({ user }) {
       {/* 📱 মোবাইল ও ট্যাবলেটের হোয়াইট টপবার */}
       <div className="lg:hidden w-full bg-white text-slate-800 p-4 flex items-center justify-between border-b border-slate-100 sticky top-0 z-50">
         <div className="flex flex-col items-start gap-1 ">
-          <button 
+          <button
             onClick={() => router.push("/")}
             className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 hover:text-[#4F46E5] transition "
           >
@@ -64,9 +64,9 @@ export default function FounderSidebar({ user }) {
             <span className="text-sm font-bold tracking-tight text-slate-800">StartupForge</span>
           </div>
         </div>
-        
-        <button 
-          onClick={() => setIsOpen(!isOpen)} 
+
+        <button
+          onClick={() => setIsOpen(!isOpen)}
           className="p-2 text-slate-500 hover:text-slate-800 transition focus:outline-none"
         >
           <HiBars3 className="w-6 h-6" />
@@ -74,15 +74,25 @@ export default function FounderSidebar({ user }) {
       </div>
 
       {/* 💻 ক্লিন হোয়াইট সাইডবার */}
-      <aside className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-white text-slate-600 flex flex-col border-r border-slate-100 font-sans transition-transform duration-300 ease-in-out
-        lg:translate-x-0 lg:static lg:h-screen
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-      `}>
-        
+      <aside
+        className={`
+    fixed inset-y-0 left-0 z-50 w-72
+    bg-white text-slate-600 flex flex-col
+    border-r border-slate-100
+    font-sans transition-transform duration-300 ease-in-out
+    ${isOpen ? "translate-x-0" : "-translate-x-full"}
+
+    lg:translate-x-0
+    lg:sticky
+    lg:top-0
+    lg:h-screen
+    lg:shrink-0
+  `}
+      >
+
         {/* ⚡ টপ হেডার সেকশন */}
         <div className="p-5 border-b border-slate-50 flex flex-col items-start gap-3 ">
-          <button 
+          <button
             onClick={() => router.push("/")}
             className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-[#4F46E5] transition bg-slate-50 hover:bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 cursor-pointer"
           >
@@ -102,9 +112,9 @@ export default function FounderSidebar({ user }) {
         <div className="p-5 border-b border-slate-50 flex items-center gap-3">
           {user?.image ? (
             // যদি ইউজার ছবি দেয়, তবে সেই ছবি লোড হবে
-            <img 
-              src={user.image} 
-              alt={user.name || "User Profile"} 
+            <img
+              src={user.image}
+              alt={user.name || "User Profile"}
               className="h-10 w-10 rounded-full object-cover border border-slate-200 ring-2 ring-slate-100"
             />
           ) : (
@@ -113,7 +123,7 @@ export default function FounderSidebar({ user }) {
               {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
             </div>
           )}
-          
+
           <div className="flex flex-col items-start gap-0.5 max-w-[170px]">
             {/* ডাইনামিক নাম */}
             <span className="text-sm font-semibold text-slate-700 truncate w-full">
@@ -135,11 +145,10 @@ export default function FounderSidebar({ user }) {
                 key={item.id}
                 href={item.route}
                 onClick={() => setIsOpen(false)}
-                className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-[13.5px] font-medium transition-all ${
-                  isActive
-                    ? "bg-[#EEF2FF] text-[#4F46E5] font-semibold"
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
-                }`}
+                className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-[13.5px] font-medium transition-all ${isActive
+                  ? "bg-[#EEF2FF] text-[#4F46E5] font-semibold"
+                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                  }`}
               >
                 <span className={isActive ? "text-[#4F46E5]" : "text-slate-400"}>
                   {item.icon}
@@ -153,8 +162,8 @@ export default function FounderSidebar({ user }) {
 
       {/* 📱 ব্যাকড্রপ ওভারলে */}
       {isOpen && (
-        <div 
-          onClick={() => setIsOpen(false)} 
+        <div
+          onClick={() => setIsOpen(false)}
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
         />
       )}

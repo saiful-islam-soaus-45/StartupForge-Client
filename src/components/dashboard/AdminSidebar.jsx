@@ -24,31 +24,31 @@ export default function AdminSidebar() {
 
   // এখানে আপনার প্রজেক্ট অনুযায়ী রাউটগুলো পরিবর্তন করে নিতে পারেন (যেমন: /admin)
   const menuItems = [
-  {
-    id: "overview",
-    label: "Overview",
-    route: "/dashboard", // ✅ এখানে /dashboard/admin না
-    icon: <LuLayoutDashboard size={20} />,
-  },
-  {
-    id: "users",
-    label: "Manage Users",
-    route: "/dashboard/manage-users",
-    icon: <LuUsers size={20} />,
-  },
-  {
-    id: "startups",
-    label: "Manage Startups",
-    route: "/dashboard/manage-startups",
-    icon: <LuRocket size={20} />,
-  },
-  {
-    id: "transactions",
-    label: "Transactions",
-    route: "/dashboard/transactions",
-    icon: <LuCreditCard size={20} />,
-  },
-];
+    {
+      id: "overview",
+      label: "Overview",
+      route: "/dashboard", // ✅ এখানে /dashboard/admin না
+      icon: <LuLayoutDashboard size={20} />,
+    },
+    {
+      id: "users",
+      label: "Manage Users",
+      route: "/dashboard/manage-users",
+      icon: <LuUsers size={20} />,
+    },
+    {
+      id: "startups",
+      label: "Manage Startups",
+      route: "/dashboard/manage-startups",
+      icon: <LuRocket size={20} />,
+    },
+    {
+      id: "transactions",
+      label: "Transactions",
+      route: "/dashboard/transactions",
+      icon: <LuCreditCard size={20} />,
+    },
+  ];
 
   return (
     <>
@@ -78,10 +78,9 @@ export default function AdminSidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200 transition-transform duration-300
-        ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200 transition-transform duration-300
+  ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } lg:translate-x-0`}
       >
         {/* Header */}
         <div className="border-b p-5">
@@ -113,9 +112,9 @@ export default function AdminSidebar() {
         {/* Menu */}
         <nav className="p-3 space-y-2">
           {menuItems.map((item) => {
-            const active = 
-              item.route === "/admin" 
-                ? pathname === "/admin" || pathname === "/admin/" 
+            const active =
+              item.route === "/admin"
+                ? pathname === "/admin" || pathname === "/admin/"
                 : pathname === item.route;
 
             return (
@@ -123,11 +122,10 @@ export default function AdminSidebar() {
                 key={item.id}
                 href={item.route}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                  active
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${active
                     ? "bg-indigo-50 text-indigo-600 font-semibold"
                     : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
-                }`}
+                  }`}
               >
                 {item.icon}
                 <span>{item.label}</span>

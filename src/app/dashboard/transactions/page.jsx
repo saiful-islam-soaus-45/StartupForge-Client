@@ -32,19 +32,28 @@ export default function TransactionsPage() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-80">
+            <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                className="flex items-center justify-center h-80"
+            >
                 <p className="text-slate-500">Loading transactions...</p>
-            </div>
+            </motion.div>
         );
     }
 
     return (
         <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
             className="space-y-8"
         >
-            <div>
+            <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+            >
                 <h1 className="text-3xl font-bold text-slate-800">
                     Transactions
                 </h1>
@@ -52,10 +61,15 @@ export default function TransactionsPage() {
                 <p className="text-slate-500 mt-2">
                     View all subscription payments.
                 </p>
-            </div>
+            </motion.div>
 
             {/* Desktop Table */}
-            <div className="hidden lg:block bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.99 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+                className="hidden lg:block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm"
+            >
                 <table className="w-full">
                     <thead className="bg-slate-50">
                         <tr className="text-left text-sm text-slate-600">
@@ -68,10 +82,13 @@ export default function TransactionsPage() {
                     </thead>
 
                     <tbody>
-                        {transactions.map((item) => (
-                            <tr
+                        {transactions.map((item, index) => (
+                            <motion.tr
                                 key={item._id}
-                                className="border-t hover:bg-slate-50"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.2, delay: index * 0.04 }}
+                                className="border-t hover:bg-slate-50 transition-colors"
                             >
                                 <td className="px-6 py-4 font-semibold">
                                     {item.userName}
@@ -94,17 +111,20 @@ export default function TransactionsPage() {
                                         {item.paymentStatus}
                                     </span>
                                 </td>
-                            </tr>
+                            </motion.tr>
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </motion.div>
 
             {/* Mobile Cards */}
             <div className="grid gap-5 lg:hidden">
-                {transactions.map((item) => (
-                    <div
+                {transactions.map((item, index) => (
+                    <motion.div
                         key={item._id}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
                         className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm"
                     >
                         <h2 className="font-bold text-slate-800">
@@ -139,7 +159,7 @@ export default function TransactionsPage() {
                                 </span>
                             </p>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
             </div>
 
