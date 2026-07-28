@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
+import { Feather } from "lucide-react";
+import FeaturedStartups from "./FeaturedStartups";
+import FeaturedOpportunities from "./FeaturedOpportunities";
 
 export default function Banner() {
   // এনিমেশনের জন্য ভ্যারিয়েন্ট (স্ট্যাগারিং ইফেক্ট তৈরি করতে)
@@ -61,8 +64,8 @@ export default function Banner() {
             variants={itemVariants}
             className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed text-gray-500"
           >
-            StartupForge connects visionary founders with talented collaborators. 
-            Find your co-founder, hire your first developer, build your dream team 
+            StartupForge connects visionary founders with talented collaborators.
+            Find your co-founder, hire your first developer, build your dream team
             — all in one place.
           </motion.p>
 
@@ -95,8 +98,47 @@ export default function Banner() {
             Trusted by 500+ startups worldwide <span className="mx-1.5">•</span> No credit card required
           </motion.p>
 
+
+
         </motion.div>
+
+        {/* 📊 Stats Section */}
+        <motion.div
+          variants={itemVariants}
+          className="mt-30 grid w-full max-w-6xl grid-cols-2 gap-5 rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-lg backdrop-blur-md md:grid-cols-4"
+        >
+          <div className="text-center">
+            <h3 className="text-3xl font-extrabold text-indigo-600">500+</h3>
+            <p className="mt-1 text-sm font-medium text-slate-500">
+              Startups
+            </p>
+          </div>
+
+          <div className="text-center">
+            <h3 className="text-3xl font-extrabold text-indigo-600">2K+</h3>
+            <p className="mt-1 text-sm font-medium text-slate-500">
+              Collaborators
+            </p>
+          </div>
+
+          <div className="text-center">
+            <h3 className="text-3xl font-extrabold text-indigo-600">1.5K+</h3>
+            <p className="mt-1 text-sm font-medium text-slate-500">
+              Opportunities
+            </p>
+          </div>
+
+          <div className="text-center">
+            <h3 className="text-3xl font-extrabold text-indigo-600">95%</h3>
+            <p className="mt-1 text-sm font-medium text-slate-500">
+              Success Rate
+            </p>
+          </div>
+        </motion.div>
+
       </div>
+      <FeaturedStartups />
+      <FeaturedOpportunities></FeaturedOpportunities>
     </section>
   );
 }

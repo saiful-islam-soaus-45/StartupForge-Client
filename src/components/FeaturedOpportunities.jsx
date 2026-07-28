@@ -1,64 +1,48 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FiCalendar, FiCpu, FiClock, FiSend, FiX, FiLink, FiMail, FiCheck, FiSearch, FiFilter } from "react-icons/fi";
+import { FiCalendar, FiCpu, FiClock, FiSend, FiX, FiLink, FiMail, FiCheck } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
-export default function BrowseOpportunities() {
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+export default function FeaturedOpportunities() {
   const limit = 6;
 
   const [opportunities, setOpportunities] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔍 Search & Filter States
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedWorkType, setSelectedWorkType] = useState("");
-  const [selectedCommitment, setSelectedCommitment] = useState("");
-
-  // 🎯 Better Auth সেশন হুক
+  // Better Auth session hook
   const { data: session } = authClient.useSession();
 
-  // 📧 ইমেইল স্টেট
+  // Email state
   const [applicantEmail, setApplicantEmail] = useState("");
 
-  // 📝 Modal & Form States
+  // Modal & Form States
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOpp, setSelectedOpp] = useState(null);
   const [portfolioLink, setPortfolioLink] = useState("");
   const [motivationMessage, setMotivationMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 🔔 Toast Notification State
+  // Toast Notification State
   const [toastMessage, setToastMessage] = useState("");
 
-  // 📦 Fetch Opportunities with Search & Filters query params
+  // Fetch Latest 6 Opportunities
   useEffect(() => {
     const fetchOpportunities = async () => {
       setLoading(true);
       try {
         const params = new URLSearchParams();
-        params.append("page", page);
+        params.append("page", 1);
         params.append("limit", limit);
-        if (searchTerm.trim()) {
-          params.append("search", searchTerm.trim());
-        }
-        if (selectedWorkType) {
-          params.append("workType", selectedWorkType);
-        }
-        if (selectedCommitment) {
-          params.append("commitmentLevel", selectedCommitment);
-        }
 
         const res = await fetch(`http://localhost:5000/api/opportunities?${params.toString()}`);
         const resData = await res.json();
 
         if (resData.success) {
           setOpportunities(resData.data);
-          setTotalPages(resData.pagination.totalPages);
         }
       } catch (err) {
         console.error(err);
@@ -67,12 +51,8 @@ export default function BrowseOpportunities() {
       }
     };
 
-    const delayDebounceFn = setTimeout(() => {
-      fetchOpportunities();
-    }, 300);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm, selectedWorkType, selectedCommitment, page]);
+    fetchOpportunities();
+  }, []);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -109,14 +89,6 @@ export default function BrowseOpportunities() {
       month: "short",
       day: "numeric",
     });
-  };
-
-  const handleWorkTypeToggle = (type) => {
-    setSelectedWorkType(prev => prev === type ? "" : type);
-  };
-
-  const handleCommitmentToggle = (level) => {
-    setSelectedCommitment(prev => prev === level ? "" : level);
   };
 
   const openApplyModal = (opp) => {
@@ -234,106 +206,18 @@ export default function BrowseOpportunities() {
         className="mx-auto max-w-7xl px-6 relative"
       >
         {/* Header Section */}
-        <motion.div variants={itemVariants} className="mb-10 text-center lg:text-left">
-          <h2 className="text-3xl font-black text-slate-950 tracking-tight sm:text-4xl bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-            Explore Open Opportunities
-          </h2>
-          <p className="mt-3 text-base sm:text-lg text-slate-500 max-w-2xl font-medium leading-relaxed">
-            Join fast-growing startups and bring your talent to revolutionary projects.
-          </p>
-        </motion.div>
-
-        {/* 🔍 Search & Filter Control Panel */}
-        <motion.div variants={itemVariants} className="mb-10 bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            {/* Search Bar (Role Title & Skills) */}
-            <div className="relative w-full md:w-96">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-                <FiSearch size={18} />
-              </span>
-              <input
-                type="text"
-                placeholder="Search by role title or skills..."
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setPage(1);
-                }}
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition"
-              />
-            </div>
-
-            {/* Clear Filters */}
-            {(searchTerm || selectedWorkType || selectedCommitment) && (
-              <button
-                onClick={() => {
-                  setSearchTerm("");
-                  setSelectedWorkType("");
-                  setSelectedCommitment("");
-                  setPage(1);
-                }}
-                className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition"
-              >
-                Clear All Filters
-              </button>
-            )}
-          </div>
-
-          {/* Filter Layout - Separated into Two Lines */}
-          <div className="space-y-3 pt-2 border-t border-slate-100">
-            {/* Line 1: Work Type */}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-slate-600 flex items-center gap-1 mr-1">
-                <FiFilter size={13} className="text-slate-400" /> Work Type:
-              </span>
-              {["Remote", "On-site", "Hybrid"].map((type) => {
-                const isSelected = selectedWorkType === type;
-                return (
-                  <button
-                    key={type}
-                    onClick={() => {
-                      handleWorkTypeToggle(type);
-                      setPage(1);
-                    }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${isSelected
-                      ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-                      }`}
-                  >
-                    {type}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Line 2: Commitment Level */}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-slate-600 flex items-center gap-1 mr-1">
-                <span className="w-[13px]" /> Commitment:
-              </span>
-              {["Full-time", "Part-time", "Contractual", "Equity-Based"].map((level) => {
-                const isSelected = selectedCommitment === level;
-                return (
-                  <button
-                    key={level}
-                    onClick={() => {
-                      handleCommitmentToggle(level);
-                      setPage(1);
-                    }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${isSelected
-                      ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-                      }`}
-                  >
-                    {level}
-                  </button>
-                );
-              })}
-            </div>
+        <motion.div variants={itemVariants} className="mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div>
+            <h2 className="text-3xl font-black text-slate-950 tracking-tight sm:text-4xl bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+              Featured Opportunities
+            </h2>
+            <p className="mt-3 text-base sm:text-lg text-slate-500 max-w-2xl font-medium leading-relaxed">
+              Discover the latest hand-picked openings from fast-growing startups.
+            </p>
           </div>
         </motion.div>
 
-        {/* Grid List (Original Cards Unchanged) */}
+        {/* Grid List */}
         {loading ? (
           <div className="flex min-h-[40vh] items-center justify-center">
             <div className="h-9 w-9 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
@@ -343,7 +227,7 @@ export default function BrowseOpportunities() {
             variants={itemVariants}
             className="text-center py-24 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200"
           >
-            <p className="text-slate-400 font-semibold tracking-wide">No opportunities found matching your criteria!</p>
+            <p className="text-slate-400 font-semibold tracking-wide">No featured opportunities available right now!</p>
           </motion.div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -410,15 +294,24 @@ export default function BrowseOpportunities() {
                 </div>
               </motion.div>
             ))}
-            
           </div>
-          
-           
-          
+        )}
+
+        {/* View All Opportunities Link at bottom right */}
+        {!loading && opportunities.length > 0 && (
+          <motion.div variants={itemVariants} className="mt-10 flex justify-end">
+            <Link
+              href="/opportunities"
+              className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-800 transition group"
+            >
+              View All Opportunities 
+              <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
+            </Link>
+          </motion.div>
         )}
       </motion.div>
 
-      {/* 🔮 CUSTOM APPLICATION MODAL */}
+      {/* CUSTOM APPLICATION MODAL */}
       <AnimatePresence>
         {isModalOpen && selectedOpp && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -464,10 +357,11 @@ export default function BrowseOpportunities() {
                     value={applicantEmail}
                     onChange={(e) => setApplicantEmail(e.target.value)}
                     disabled={!!applicantEmail}
-                    className={`w-full rounded-xl border px-3.5 py-2.5 text-sm font-medium shadow-sm outline-none transition ${applicantEmail
-                      ? "bg-slate-50 text-slate-400 border-slate-200/80 cursor-not-allowed font-semibold"
-                      : "bg-white text-slate-800 border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                      }`}
+                    className={`w-full rounded-xl border px-3.5 py-2.5 text-sm font-medium shadow-sm outline-none transition ${
+                      applicantEmail
+                        ? "bg-slate-50 text-slate-400 border-slate-200/80 cursor-not-allowed font-semibold"
+                        : "bg-white text-slate-800 border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    }`}
                     required
                   />
                 </div>
@@ -532,7 +426,7 @@ export default function BrowseOpportunities() {
         )}
       </AnimatePresence>
 
-      {/* 🔔 DYNAMIC TOAST NOTIFICATION */}
+      {/* DYNAMIC TOAST NOTIFICATION */}
       <AnimatePresence>
         {toastMessage && (
           <motion.div
