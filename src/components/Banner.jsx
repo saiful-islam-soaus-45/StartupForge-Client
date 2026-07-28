@@ -6,6 +6,8 @@ import { FiArrowRight } from "react-icons/fi";
 import { Feather } from "lucide-react";
 import FeaturedStartups from "./FeaturedStartups";
 import FeaturedOpportunities from "./FeaturedOpportunities";
+import WhyJoin from "./WhyJoin";
+import Testimonials from "./Testimonials";
 
 export default function Banner() {
   // এনিমেশনের জন্য ভ্যারিয়েন্ট (স্ট্যাগারিং ইফেক্ট তৈরি করতে)
@@ -139,6 +141,8 @@ export default function Banner() {
       </div>
       <FeaturedStartups />
       <FeaturedOpportunities></FeaturedOpportunities>
+      <WhyJoin></WhyJoin>
+      <Testimonials></Testimonials>
     </section>
   );
 }
