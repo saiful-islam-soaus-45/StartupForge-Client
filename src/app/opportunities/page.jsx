@@ -272,7 +272,7 @@ export default function BrowseOpportunities() {
                   setSelectedCommitment("");
                   setPage(1);
                 }}
-                className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition"
+                className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition cursor-pointer"
               >
                 Clear All Filters
               </button>
@@ -346,75 +346,120 @@ export default function BrowseOpportunities() {
             <p className="text-slate-400 font-semibold tracking-wide">No opportunities found matching your criteria!</p>
           </motion.div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {opportunities.map((opp) => (
-              <motion.div
-                key={opp._id}
-                variants={itemVariants}
-                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm hover:shadow-xl hover:border-indigo-200 transition-all duration-300"
-              >
-                <div>
-                  <div className="flex flex-wrap items-center gap-2 mb-4">
-                    {opp.workType && (
-                      <span className="inline-flex rounded-lg bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-600 border border-indigo-100/50">
-                        {opp.workType}
-                      </span>
-                    )}
-                    {opp.commitmentLevel && (
-                      <span className="inline-flex rounded-lg bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 border border-slate-200/60">
-                        {opp.commitmentLevel}
-                      </span>
-                    )}
-                  </div>
 
+          <>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {opportunities.map((opp) => (
+                <motion.div
+                  key={opp._id}
+                  variants={itemVariants}
+                  className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm hover:shadow-xl hover:border-indigo-200 transition-all duration-300"
+                >
                   <div>
-                    <h3 className="text-xl font-extrabold text-slate-900 capitalize tracking-tight group-hover:text-indigo-600 transition-colors duration-200 line-clamp-1">
-                      {opp.roleTitle}
-                    </h3>
-
-                    <div className="w-6 h-[2px] bg-indigo-600/30 my-3 group-hover:w-12 transition-all duration-300 rounded-full" />
-
-                    <div className="space-y-2.5 mt-4">
-                      <div className="flex items-start gap-2 text-xs sm:text-sm text-slate-600 font-medium">
-                        <FiCpu size={15} className="text-slate-400 shrink-0 mt-0.5" />
-                        <span className="line-clamp-2">
-                          <strong className="text-slate-700">Skills:</strong> {opp.requiredSkills}
+                    <div className="flex flex-wrap items-center gap-2 mb-4">
+                      {opp.workType && (
+                        <span className="inline-flex rounded-lg bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-600 border border-indigo-100/50">
+                          {opp.workType}
                         </span>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-600 font-medium">
-                        <FiCalendar size={15} className="text-slate-400 shrink-0" />
-                        <span>
-                          <strong className="text-slate-700">Deadline:</strong> {opp.deadline}
+                      )}
+                      {opp.commitmentLevel && (
+                        <span className="inline-flex rounded-lg bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 border border-slate-200/60">
+                          {opp.commitmentLevel}
                         </span>
-                      </div>
+                      )}
+                    </div>
 
-                      <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 font-medium italic">
-                        <FiClock size={15} className="text-slate-400 shrink-0" />
-                        <span>Posted: {formatDate(opp.createdAt)}</span>
+                    <div>
+                      <h3 className="text-xl font-extrabold text-slate-900 capitalize tracking-tight group-hover:text-indigo-600 transition-colors duration-200 line-clamp-1">
+                        {opp.roleTitle}
+                      </h3>
+
+                      <div className="w-6 h-[2px] bg-indigo-600/30 my-3 group-hover:w-12 transition-all duration-300 rounded-full" />
+
+                      <div className="space-y-2.5 mt-4">
+                        <div className="flex items-start gap-2 text-xs sm:text-sm text-slate-600 font-medium">
+                          <FiCpu size={15} className="text-slate-400 shrink-0 mt-0.5" />
+                          <span className="line-clamp-2">
+                            <strong className="text-slate-700">Skills:</strong> {opp.requiredSkills}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-600 font-medium">
+                          <FiCalendar size={15} className="text-slate-400 shrink-0" />
+                          <span>
+                            <strong className="text-slate-700">Deadline:</strong> {opp.deadline}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 font-medium italic">
+                          <FiClock size={15} className="text-slate-400 shrink-0" />
+                          <span>Posted: {formatDate(opp.createdAt)}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
+
+                  <div className="mt-6 pt-4 border-t border-slate-100">
+                    <motion.button
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.99 }}
+                      onClick={() => openApplyModal(opp)}
+                      className="flex items-center justify-center gap-2 w-full rounded-xl bg-indigo-600 px-4 py-3 text-xs font-bold text-white hover:bg-indigo-700 shadow-md hover:shadow-lg hover:shadow-indigo-100 transition-all duration-200 cursor-pointer group/btn"
+                    >
+                      Apply Now
+                      <FiSend size={13} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />
+                    </motion.button>
+                  </div>
+                </motion.div>
+              ))}
+
+            </div>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-2 px-4">
+                {/* Previous */}
+                <button
+                  onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={page === 1}
+                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${page === 1
+                      ? "cursor-not-allowed bg-slate-100 text-slate-400"
+                      : "border border-slate-200 bg-white hover:border-indigo-500 hover:text-indigo-600"
+                    }`}
+                >
+                  ← Previous
+                </button>
+
+                {/* Page Numbers */}
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setPage(index + 1)}
+                      className={`h-9 w-9 rounded-lg text-xs font-bold transition sm:h-10 sm:w-10 sm:text-sm ${page === index + 1
+                          ? "bg-indigo-600 text-white shadow-md"
+                          : "border border-slate-200 bg-white text-slate-700 hover:border-indigo-500 hover:text-indigo-600"
+                        }`}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-slate-100">
-                  <motion.button
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    onClick={() => openApplyModal(opp)}
-                    className="flex items-center justify-center gap-2 w-full rounded-xl bg-indigo-600 px-4 py-3 text-xs font-bold text-white hover:bg-indigo-700 shadow-md hover:shadow-lg hover:shadow-indigo-100 transition-all duration-200 cursor-pointer group/btn"
-                  >
-                    Apply Now
-                    <FiSend size={13} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />
-                  </motion.button>
-                </div>
-              </motion.div>
-            ))}
-            
-          </div>
-          
-           
-          
+                {/* Next */}
+                <button
+                  onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={page === totalPages}
+                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${page === totalPages
+                      ? "cursor-not-allowed bg-slate-100 text-slate-400"
+                      : "border border-slate-200 bg-white hover:border-indigo-500 hover:text-indigo-600"
+                    }`}
+                >
+                  Next →
+                </button>
+              </div>
+            )}
+          </>
+
         )}
       </motion.div>
 
