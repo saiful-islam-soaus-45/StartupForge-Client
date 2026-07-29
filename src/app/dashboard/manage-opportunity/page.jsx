@@ -1,5 +1,5 @@
 "use client";
-import { useSession } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -32,8 +32,15 @@ console.log(session?.user?.id);
   if (!userId) return;
 
   try {
+    // token
+    const {data:tokenData} = await authClient.token()
+    console.log(tokenData);
     const res = await fetch(
-      `http://localhost:5000/api/opportunities/user/${userId}`
+      `http://localhost:5000/api/opportunities/user/${userId}`,{
+        headers:{
+          Authorization:`Bearer ${tokenData?.token}`
+        }
+      }
     );
 
     const data = await res.json();
@@ -66,8 +73,13 @@ console.log(session?.user?.id);
     if (!opportunityToDelete) return;
 
     try {
+      const {data:tokenData} = await authClient.token()
+    console.log(tokenData);
       const res = await fetch(`http://localhost:5000/api/opportunities/${opportunityToDelete._id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${tokenData?.token}`,
+        },
       });
       const data = await res.json();
 
@@ -95,10 +107,13 @@ console.log(session?.user?.id);
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
+      const {data:tokenData} = await authClient.token()
+    console.log(tokenData);
       const res = await fetch(`http://localhost:5000/api/opportunities/${selectedOpportunity._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenData?.token}`,
         },
         body: JSON.stringify(selectedOpportunity),
       });

@@ -13,9 +13,8 @@ export default function CollaboratorSidebar({ user }) {
   
   // 🎯 ডাইনামিক প্রোফাইল স্টেট (লাইভ ডাটা সিঙ্কের জন্য)
   const [dbProfile, setDbProfile] = useState({ name: "", image: "" });
-  const userEmail = user?.email || "soausahmedbd91@gmail.com";
+  const userEmail = user?.email || "";
 
-  
   // ডাটাবেজ থেকে লাইভ প্রোফাইল ডাটা লোড করা
   useEffect(() => {
     if (!userEmail) return;
@@ -39,7 +38,6 @@ export default function CollaboratorSidebar({ user }) {
     fetchSidebarProfile();
   }, [userEmail, user]);
 
-  // 🎯 "Apply to Opportunity" অপশনটি এখান থেকে সম্পূর্ণ বাদ দেওয়া হয়েছে
   const menuItems = [
     { 
       id: "overview", 
@@ -56,7 +54,7 @@ export default function CollaboratorSidebar({ user }) {
     { 
       id: "profile", 
       label: "Profile", 
-      route: "/dashboard/profile",
+      route: "/dashboard/profile", // 👈 এখানে ক্লিক করলে প্রফাইল এডিট পেজে চলে যাবে
       icon: <LuUser className="w-5 h-5" />
     },
   ];
@@ -118,7 +116,7 @@ export default function CollaboratorSidebar({ user }) {
           </div>
         </div>
 
-        {/* 👤 ডাইনামিক ইউজার প্রোফাইল সেকশন (লাইভ ডাটাবেজ ইমেজ ও নাম দেখাবে) */}
+        {/* 👤 ডাইনামিক ইউজার প্রোফাইল সেকশন */}
         <div className="p-5 border-b border-slate-50 flex items-center gap-3">
           {displayImage ? (
             <img 
@@ -133,11 +131,9 @@ export default function CollaboratorSidebar({ user }) {
           )}
           
           <div className="flex flex-col items-start gap-0.5 max-w-[170px]">
-            {/* ডাইনামিক নাম */}
             <span className="text-sm font-semibold text-slate-700 truncate w-full">
               {displayName}
             </span>
-            {/* রোল */}
             <span className="px-2 py-0.5 text-[10px] font-medium bg-[#E6F4EA] text-[#137333] rounded-full border border-green-100 capitalize">
               {user?.role || "Collaborator"}
             </span>

@@ -28,8 +28,14 @@ export default function MyApplicationsPage() {
         setLoading(true);
         setError(null);
 
+        const { data: tokenData } = await authClient.token();
         const res = await fetch(
-          `http://localhost:5000/api/applications?applicantEmail=${targetEmail}`
+          `http://localhost:5000/api/applications?applicantEmail=${targetEmail}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${tokenData?.token}`
+            }
+          }
         );
 
         if (!res.ok) {

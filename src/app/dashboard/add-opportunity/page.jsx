@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiPlusSquare, FiBriefcase, FiCpu, FiClock, FiCalendar, FiAlertCircle, FiLoader, FiZap } from "react-icons/fi";
 import Link from "next/link";
-import { useSession } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 
 export default function AddOpportunityPage() {
   const [formData, setFormData] = useState({
@@ -73,9 +73,12 @@ export default function AddOpportunityPage() {
     };
 
     try {
+      const {data: tokenData} = await authClient.token();
+
       const res = await fetch("http://localhost:5000/api/opportunities", {
         method: "POST",
         headers: {
+          "Authorization": `Bearer ${tokenData?.token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),

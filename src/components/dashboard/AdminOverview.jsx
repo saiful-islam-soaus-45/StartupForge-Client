@@ -17,6 +17,7 @@ import {
   Tooltip,
 } from "recharts";
 import { motion } from "framer-motion";
+import { authClient } from "@/lib/auth-client";
 
 export default function AdminOverview() {
   const [stats, setStats] = useState({
@@ -29,8 +30,14 @@ export default function AdminOverview() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
+        const {data: tokenData} = await authClient.token();
         const res = await fetch(
-          "http://localhost:5000/api/admin/overview"
+          "http://localhost:5000/api/admin/overview",
+          {
+            headers: {
+              'Authorization': `Bearer ${tokenData?.token}`
+            }
+          }
         );
         const data = await res.json();
 

@@ -53,7 +53,14 @@ export default function BrowseOpportunities() {
           params.append("commitmentLevel", selectedCommitment);
         }
 
-        const res = await fetch(`http://localhost:5000/api/opportunities?${params.toString()}`);
+        // 👈 credentials: "include" ব্যবহার করা হয়েছে যাতে কুকি/টোকেন ব্যাকএন্ডে যায়
+        const res = await fetch(`http://localhost:5000/api/opportunities?${params.toString()}`, {
+          method: "GET",
+          
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         const resData = await res.json();
 
         if (resData.success) {
@@ -178,8 +185,10 @@ export default function BrowseOpportunities() {
     };
 
     try {
+      // 👈 এখানেও credentials: "include" দেওয়া হয়েছে
       const res = await fetch("http://localhost:5000/api/applications", {
         method: "POST",
+       
         headers: {
           "Content-Type": "application/json",
         },
@@ -246,7 +255,7 @@ export default function BrowseOpportunities() {
         {/* 🔍 Search & Filter Control Panel */}
         <motion.div variants={itemVariants} className="mb-10 bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            {/* Search Bar (Role Title & Skills) */}
+            {/* Search Bar */}
             <div className="relative w-full md:w-96">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
                 <FiSearch size={18} />
@@ -279,7 +288,7 @@ export default function BrowseOpportunities() {
             )}
           </div>
 
-          {/* Filter Layout - Separated into Two Lines */}
+          {/* Filter Layout */}
           <div className="space-y-3 pt-2 border-t border-slate-100">
             {/* Line 1: Work Type */}
             <div className="flex flex-wrap items-center gap-2">
@@ -295,10 +304,11 @@ export default function BrowseOpportunities() {
                       handleWorkTypeToggle(type);
                       setPage(1);
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${isSelected
-                      ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-                      }`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${
+                      isSelected
+                        ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
+                        : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                    }`}
                   >
                     {type}
                   </button>
@@ -320,10 +330,11 @@ export default function BrowseOpportunities() {
                       handleCommitmentToggle(level);
                       setPage(1);
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${isSelected
-                      ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-                      }`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${
+                      isSelected
+                        ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
+                        : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                    }`}
                   >
                     {level}
                   </button>
@@ -333,7 +344,7 @@ export default function BrowseOpportunities() {
           </div>
         </motion.div>
 
-        {/* Grid List (Original Cards Unchanged) */}
+        {/* Grid List */}
         {loading ? (
           <div className="flex min-h-[40vh] items-center justify-center">
             <div className="h-9 w-9 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
@@ -346,7 +357,6 @@ export default function BrowseOpportunities() {
             <p className="text-slate-400 font-semibold tracking-wide">No opportunities found matching your criteria!</p>
           </motion.div>
         ) : (
-
           <>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {opportunities.map((opp) => (
@@ -412,58 +422,57 @@ export default function BrowseOpportunities() {
                   </div>
                 </motion.div>
               ))}
-
             </div>
+
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-10 flex flex-wrap items-center justify-center gap-2 px-4">
-                {/* Previous */}
                 <button
                   onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                   disabled={page === 1}
-                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${page === 1
+                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${
+                    page === 1
                       ? "cursor-not-allowed bg-slate-100 text-slate-400"
                       : "border border-slate-200 bg-white hover:border-indigo-500 hover:text-indigo-600"
-                    }`}
+                  }`}
                 >
                   ← Previous
                 </button>
 
-                {/* Page Numbers */}
                 <div className="flex flex-wrap items-center justify-center gap-2">
                   {Array.from({ length: totalPages }, (_, index) => (
                     <button
                       key={index}
                       onClick={() => setPage(index + 1)}
-                      className={`h-9 w-9 rounded-lg text-xs font-bold transition sm:h-10 sm:w-10 sm:text-sm ${page === index + 1
+                      className={`h-9 w-9 rounded-lg text-xs font-bold transition sm:h-10 sm:w-10 sm:text-sm ${
+                        page === index + 1
                           ? "bg-indigo-600 text-white shadow-md"
                           : "border border-slate-200 bg-white text-slate-700 hover:border-indigo-500 hover:text-indigo-600"
-                        }`}
+                      }`}
                     >
                       {index + 1}
                     </button>
                   ))}
                 </div>
 
-                {/* Next */}
                 <button
                   onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
                   disabled={page === totalPages}
-                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${page === totalPages
+                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${
+                    page === totalPages
                       ? "cursor-not-allowed bg-slate-100 text-slate-400"
                       : "border border-slate-200 bg-white hover:border-indigo-500 hover:text-indigo-600"
-                    }`}
+                  }`}
                 >
                   Next →
                 </button>
               </div>
             )}
           </>
-
         )}
       </motion.div>
 
-      {/* 🔮 CUSTOM APPLICATION MODAL */}
+      {/* Modal */}
       <AnimatePresence>
         {isModalOpen && selectedOpp && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -497,7 +506,6 @@ export default function BrowseOpportunities() {
               </div>
 
               <form onSubmit={handleSubmitApplication} className="space-y-4">
-                {/* Applicant Email */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1">
                     <FiMail size={12} className="text-slate-400" /> Applicant Email <span className="text-rose-500">*</span>
@@ -509,15 +517,15 @@ export default function BrowseOpportunities() {
                     value={applicantEmail}
                     onChange={(e) => setApplicantEmail(e.target.value)}
                     disabled={!!applicantEmail}
-                    className={`w-full rounded-xl border px-3.5 py-2.5 text-sm font-medium shadow-sm outline-none transition ${applicantEmail
-                      ? "bg-slate-50 text-slate-400 border-slate-200/80 cursor-not-allowed font-semibold"
-                      : "bg-white text-slate-800 border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                      }`}
+                    className={`w-full rounded-xl border px-3.5 py-2.5 text-sm font-medium shadow-sm outline-none transition ${
+                      applicantEmail
+                        ? "bg-slate-50 text-slate-400 border-slate-200/80 cursor-not-allowed font-semibold"
+                        : "bg-white text-slate-800 border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    }`}
                     required
                   />
                 </div>
 
-                {/* Portfolio / GitHub Link */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1">
                     <FiLink size={12} className="text-slate-400" /> Portfolio / GitHub Link
@@ -531,7 +539,6 @@ export default function BrowseOpportunities() {
                   />
                 </div>
 
-                {/* Motivation Message */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5">
                     Motivation Message <span className="text-rose-500">*</span>
@@ -546,7 +553,6 @@ export default function BrowseOpportunities() {
                   />
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex items-center justify-end gap-3 pt-2">
                   <button
                     type="button"
@@ -577,7 +583,7 @@ export default function BrowseOpportunities() {
         )}
       </AnimatePresence>
 
-      {/* 🔔 DYNAMIC TOAST NOTIFICATION */}
+      {/* Toast Notification */}
       <AnimatePresence>
         {toastMessage && (
           <motion.div

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FiRefreshCw, FiMenu, FiX, FiChevronDown, FiUser, FiLogOut } from "react-icons/fi";
+import { FiMenu, FiX, FiChevronDown, FiUser, FiLogOut } from "react-icons/fi";
 import { RxDashboard } from "react-icons/rx";
 import { authClient } from "@/lib/auth-client"; // আপনার Better-Auth ক্লায়েন্ট
 
@@ -65,23 +65,34 @@ export default function Navbar() {
 
         {/* Navigation - Desktop */}
         <div className="hidden items-center gap-10 text-[15px] font-medium text-gray-700 md:flex">
-          <Link href="/" className="hover:text-indigo-600 transition">Home</Link>
-          <Link href="/browse-startups" className="hover:text-indigo-600 transition">Browse Startups</Link>
-          <Link href="/opportunities" className="hover:text-indigo-600 transition">Browse Opportunities</Link>
+          <Link 
+            href="/" 
+            className={`transition font-bold ${pathname === "/" ? "text-indigo-600" : "hover:text-indigo-600"}`}
+          >
+            Home
+          </Link>
+          <Link 
+            href="/browse-startups" 
+            className={`transition font-bold ${pathname === "/browse-startups" ? "text-indigo-600" : "hover:text-indigo-600"}`}
+          >
+            Browse Startups
+          </Link>
+          <Link 
+            href="/opportunities" 
+            className={`transition font-bold ${pathname === "/opportunities" ? "text-indigo-600" : "hover:text-indigo-600"}`}
+          >
+            Browse Opportunities
+          </Link>
         </div>
 
         {/* Right Side Buttons - Desktop */}
         <div className="hidden items-center gap-3 md:flex">
-          <button className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition cursor-pointer">
-            <FiRefreshCw size={18} />
-          </button>
-
           {!session ? (
             <>
-              <Link href="/auth/login" className="rounded-xl border border-gray-300 px-5 py-2 text-[14px] font-semibold text-slate-700 hover:bg-gray-50 transition">
+              <Link href="/auth/login" className="rounded-xl border border-gray-300 px-5 py-2 text-[14px] font-semibold text-slate-700 hover:bg-gray-50 transition cursor-pointer">
                 Login
               </Link>
-              <Link href="/auth/signup" className="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2 text-[14px] text-white font-semibold hover:opacity-95 transition shadow-sm">
+              <Link href="/auth/signup" className="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2 text-[14px] text-white font-semibold hover:opacity-95 transition shadow-sm cursor-pointer">
                 Get Started
               </Link>
             </>
@@ -158,9 +169,27 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white px-6 py-6 space-y-5 shadow-inner">
           <div className="flex flex-col space-y-4 font-medium text-gray-700">
-            <Link href="/" onClick={() => setIsOpen(false)} className="hover:text-indigo-600 transition py-1 text-lg">Home</Link>
-            <Link href="/browse-startups" onClick={() => setIsOpen(false)} className="hover:text-indigo-600 transition py-1 text-lg">Browse Startups</Link>
-            <Link href="/opportunities" onClick={() => setIsOpen(false)} className="hover:text-indigo-600 transition py-1 text-lg">Browse Opportunities</Link>
+            <Link 
+              href="/" 
+              onClick={() => setIsOpen(false)} 
+              className={`transition py-1 text-md font-bold ${pathname === "/" ? "text-indigo-600" : "hover:text-indigo-600"}`}
+            >
+              Home
+            </Link>
+            <Link 
+              href="/browse-startups" 
+              onClick={() => setIsOpen(false)} 
+              className={`transition py-1 text-md font-bold ${pathname === "/browse-startups" ? "text-indigo-600" : "hover:text-indigo-600"}`}
+            >
+              Browse Startups
+            </Link>
+            <Link 
+              href="/opportunities" 
+              onClick={() => setIsOpen(false)} 
+              className={`transition py-1 text-md font ${pathname === "/opportunities" ? "text-indigo-600" : "hover:text-indigo-600"}`}
+            >
+              Browse Opportunities
+            </Link>
           </div>
 
           <hr className="border-gray-200" />
@@ -206,5 +235,5 @@ export default function Navbar() {
         </div>
       )}
     </nav>
-  ); 
+  );
 }

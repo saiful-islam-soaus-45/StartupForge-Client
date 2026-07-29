@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import React, { useEffect, useState } from "react";
 import { FiSend, FiBriefcase, FiXCircle } from "react-icons/fi"; // FiBriefcase যুক্ত করা হয়েছে Opportunities এর জন্য
 import {
@@ -26,7 +27,12 @@ export default function CollaboratorOverview({ user }) {
       try {
         setLoading(true);
         // ব্যাকএন্ডের এপিআই থেকে কোলাবোরেটরের সব অ্যাপ্লিকেশন নিয়ে আসা
-        const response = await fetch(`http://localhost:5000/api/applications/${user.email}`);
+        const {data: tokenData} = await authClient.token();
+        const response = await fetch(`http://localhost:5000/api/applications/${user.email}`, {
+          headers: {
+            'Authorization': `Bearer ${tokenData?.token}`
+          }
+        });
         const result = await response.json();
 
         if (result.success && result.data) {

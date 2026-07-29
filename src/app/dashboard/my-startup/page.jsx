@@ -34,7 +34,12 @@ export default function MyStartupPage() {
 
   useEffect(() => {
     if (session?.user?.email) {
-      fetch(`http://localhost:5000/api/startups/${session.user.email}`)
+      const {data: tokenData} = authClient.token();
+      fetch(`http://localhost:5000/api/startups/${session.user.email}`, {
+        headers: {
+          'Authorization': `Bearer ${tokenData?.token}`,
+        }
+      })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
@@ -95,9 +100,13 @@ export default function MyStartupPage() {
     };
 
     try {
+      const {data: tokenData} = authClient.token();
       const res = await fetch(url, {
         method: method,
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${tokenData?.token}`,
+         },
         body: JSON.stringify(payload),
       });
       const data = await res.json();
@@ -128,8 +137,12 @@ export default function MyStartupPage() {
   const handleConfirmDelete = async () => {
     setShowDeleteConfirm(false);
     try {
+      const {data: tokenData} = await authClient.token();
       const res = await fetch(`http://localhost:5000/api/startups/${startup._id}`, {
-        method: "DELETE",
+        method: "DELETE", 
+        headers: {
+          'Authorization': `Bearer ${tokenData?.token}`,
+        }
       });
       const data = await res.json();
       if (data.success) {

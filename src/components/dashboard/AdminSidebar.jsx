@@ -56,7 +56,7 @@ export default function AdminSidebar() {
       <div className="lg:hidden flex items-center justify-between bg-white border-b px-4 py-3">
         <button
           onClick={() => router.push("/")}
-          className="flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-indigo-600"
+          className="flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-indigo-600 cursor-pointer"
         >
           <HiOutlineArrowLeft className="w-4 h-4" />
           Back
@@ -86,7 +86,7 @@ export default function AdminSidebar() {
         <div className="border-b p-5">
           <button
             onClick={() => router.push("/")}
-            className="flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-indigo-600"
+            className="flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-indigo-600 cursor-pointer"
           >
             <HiOutlineArrowLeft />
             Back

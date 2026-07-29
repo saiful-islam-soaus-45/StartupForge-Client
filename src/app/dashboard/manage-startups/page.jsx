@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { authClient } from "@/lib/auth-client";
 
 export default function ManageStartupsPage() {
     const [startups, setStartups] = useState([]);
@@ -14,7 +15,12 @@ export default function ManageStartupsPage() {
 
     const fetchStartups = async () => {
         try {
-            const res = await fetch("http://localhost:5000/api/admin/startups");
+            const {data: tokenData} = await authClient.token();
+            const res = await fetch("http://localhost:5000/api/admin/startups", {
+                headers: {
+                    'Authorization': `Bearer ${tokenData?.token}`
+                }
+            });
             const data = await res.json();
 
             if (data.success) {
@@ -34,12 +40,14 @@ export default function ManageStartupsPage() {
                 : "approved";
 
         try {
+            const {data: tokenData} = await authClient.token();
             const res = await fetch(
                 `http://localhost:5000/api/admin/startups/${id}/status`,
                 {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
+                        'Authorization': `Bearer ${tokenData?.token}`
                     },
                     body: JSON.stringify({
                         status: newStatus,

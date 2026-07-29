@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { authClient } from "@/lib/auth-client";
 
 export default function TransactionsPage() {
     const [transactions, setTransactions] = useState([]);
@@ -14,8 +15,14 @@ export default function TransactionsPage() {
 
     const fetchTransactions = async () => {
         try {
+            const {data: tokenData} = await authClient.token();
             const res = await fetch(
-                "http://localhost:5000/api/admin/transactions"
+                "http://localhost:5000/api/admin/transactions",
+                {
+                    headers: {
+                        'Authorization': `Bearer ${tokenData?.token}`
+                    }
+                }
             );
 
             const data = await res.json();
