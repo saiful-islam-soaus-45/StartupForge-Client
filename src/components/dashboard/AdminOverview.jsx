@@ -32,7 +32,7 @@ export default function AdminOverview() {
       try {
         const {data: tokenData} = await authClient.token();
         const res = await fetch(
-          "http://localhost:5000/api/admin/overview",
+          "${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/overview",
           {
             headers: {
               'Authorization': `Bearer ${tokenData?.token}`

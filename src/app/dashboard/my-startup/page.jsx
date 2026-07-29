@@ -35,7 +35,7 @@ export default function MyStartupPage() {
   useEffect(() => {
     if (session?.user?.email) {
       const {data: tokenData} = authClient.token();
-      fetch(`http://localhost:5000/api/startups/${session.user.email}`, {
+      fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/startups/${session.user.email}`, {
         headers: {
           'Authorization': `Bearer ${tokenData?.token}`,
         }
@@ -89,8 +89,8 @@ export default function MyStartupPage() {
     setStatusMsg({ type: "", text: "" });
 
     const url = isEditing 
-      ? `http://localhost:5000/api/startups/${startup._id}`
-      : "http://localhost:5000/api/startups";
+      ? `${process.env.NEXT_PUBLIC_SERVER_URL}/api/startups/${startup._id}`
+      : "${process.env.NEXT_PUBLIC_SERVER_URL}/api/startups";
       
     const method = isEditing ? "PUT" : "POST";
 
@@ -138,7 +138,7 @@ export default function MyStartupPage() {
     setShowDeleteConfirm(false);
     try {
       const {data: tokenData} = await authClient.token();
-      const res = await fetch(`http://localhost:5000/api/startups/${startup._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/startups/${startup._id}`, {
         method: "DELETE", 
         headers: {
           'Authorization': `Bearer ${tokenData?.token}`,

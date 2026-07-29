@@ -38,7 +38,7 @@ export default function AddOpportunityPage() {
       try {
         if (!currentUser.userId) return;
 
-        const res = await fetch(`http://localhost:5000/api/my-opportunities-count?userId=${currentUser.userId}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/my-opportunities-count?userId=${currentUser.userId}`);
         const data = await res.json();
 
         if (data.success) {
@@ -75,7 +75,7 @@ export default function AddOpportunityPage() {
     try {
       const {data: tokenData} = await authClient.token();
 
-      const res = await fetch("http://localhost:5000/api/opportunities", {
+      const res = await fetch("${process.env.NEXT_PUBLIC_SERVER_URL}/api/opportunities", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${tokenData?.token}`,

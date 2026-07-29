@@ -21,7 +21,7 @@ export default function CollaboratorSidebar({ user }) {
 
     const fetchSidebarProfile = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/profile/${userEmail}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/profile/${userEmail}`);
         const resData = await res.json();
         
         if (resData.success && resData.data) {

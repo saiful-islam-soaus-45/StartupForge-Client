@@ -28,7 +28,7 @@ export default function CollaboratorOverview({ user }) {
         setLoading(true);
         // ব্যাকএন্ডের এপিআই থেকে কোলাবোরেটরের সব অ্যাপ্লিকেশন নিয়ে আসা
         const {data: tokenData} = await authClient.token();
-        const response = await fetch(`http://localhost:5000/api/applications/${user.email}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications/${user.email}`, {
           headers: {
             'Authorization': `Bearer ${tokenData?.token}`
           }

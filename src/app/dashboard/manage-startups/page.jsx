@@ -16,7 +16,7 @@ export default function ManageStartupsPage() {
     const fetchStartups = async () => {
         try {
             const {data: tokenData} = await authClient.token();
-            const res = await fetch("http://localhost:5000/api/admin/startups", {
+            const res = await fetch("${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/startups", {
                 headers: {
                     'Authorization': `Bearer ${tokenData?.token}`
                 }
@@ -42,7 +42,7 @@ export default function ManageStartupsPage() {
         try {
             const {data: tokenData} = await authClient.token();
             const res = await fetch(
-                `http://localhost:5000/api/admin/startups/${id}/status`,
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/startups/${id}/status`,
                 {
                     method: "PATCH",
                     headers: {

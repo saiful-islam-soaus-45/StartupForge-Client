@@ -30,7 +30,7 @@ export default function MyApplicationsPage() {
 
         const { data: tokenData } = await authClient.token();
         const res = await fetch(
-          `http://localhost:5000/api/applications?applicantEmail=${targetEmail}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications?applicantEmail=${targetEmail}`,
           {
             headers: {
               'Authorization': `Bearer ${tokenData?.token}`

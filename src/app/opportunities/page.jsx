@@ -54,7 +54,7 @@ export default function BrowseOpportunities() {
         }
 
         // 👈 credentials: "include" ব্যবহার করা হয়েছে যাতে কুকি/টোকেন ব্যাকএন্ডে যায়
-        const res = await fetch(`http://localhost:5000/api/opportunities?${params.toString()}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/opportunities?${params.toString()}`, {
           method: "GET",
           
           headers: {
@@ -186,7 +186,7 @@ export default function BrowseOpportunities() {
 
     try {
       // 👈 এখানেও credentials: "include" দেওয়া হয়েছে
-      const res = await fetch("http://localhost:5000/api/applications", {
+      const res = await fetch("${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications", {
         method: "POST",
        
         headers: {

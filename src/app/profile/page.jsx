@@ -14,7 +14,7 @@ export default function ProfilePage() {
     const fetchLatestProfile = async () => {
       if (session?.user?.email) {
         try {
-          const res = await fetch(`http://localhost:5000/api/profile/${session.user.email}`);
+          const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/profile/${session.user.email}`);
           const data = await res.json();
           if (data.success && data.data) {
             setProfileData(data.data);

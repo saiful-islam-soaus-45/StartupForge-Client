@@ -16,7 +16,7 @@ export default function ApplicationsPage() {
   if (!session?.user?.email) return;
 
   fetch(
-    `http://localhost:5000/api/applications?founderEmail=${session.user.email}`
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications?founderEmail=${session.user.email}`
   )
     .then((res) => res.json())
     .then((data) => {
@@ -34,7 +34,7 @@ export default function ApplicationsPage() {
   // 🎯 স্ট্যাটাস আপডেট হ্যান্ডলার (Accepted / Rejected)
   const handleStatusUpdate = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/applications/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),

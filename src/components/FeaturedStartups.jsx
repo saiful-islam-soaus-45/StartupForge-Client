@@ -13,7 +13,7 @@ export default function FeaturedStartups() {
         const fetchStartups = async () => {
             try {
                 const res = await fetch(
-                    "http://localhost:5000/api/public/startups?limit=6"
+                    "${process.env.NEXT_PUBLIC_SERVER_URL}/api/public/startups?limit=6"
                 );
 
                 const data = await res.json();

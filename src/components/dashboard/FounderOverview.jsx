@@ -51,7 +51,7 @@ export default function FounderOverview({ user: propUser }) {
     const fetchFounderStats = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:5000/api/founder/stats?email=${encodeURIComponent(identifier)}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/founder/stats?email=${encodeURIComponent(identifier)}`);
         const data = await res.json();
 
         if (data.success && data.data) {

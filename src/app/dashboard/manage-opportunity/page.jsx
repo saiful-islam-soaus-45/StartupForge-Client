@@ -36,7 +36,7 @@ console.log(session?.user?.id);
     const {data:tokenData} = await authClient.token()
     console.log(tokenData);
     const res = await fetch(
-      `http://localhost:5000/api/opportunities/user/${userId}`,{
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/opportunities/user/${userId}`,{
         headers:{
           Authorization:`Bearer ${tokenData?.token}`
         }
@@ -75,7 +75,7 @@ console.log(session?.user?.id);
     try {
       const {data:tokenData} = await authClient.token()
     console.log(tokenData);
-      const res = await fetch(`http://localhost:5000/api/opportunities/${opportunityToDelete._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/opportunities/${opportunityToDelete._id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${tokenData?.token}`,
@@ -109,7 +109,7 @@ console.log(session?.user?.id);
     try {
       const {data:tokenData} = await authClient.token()
     console.log(tokenData);
-      const res = await fetch(`http://localhost:5000/api/opportunities/${selectedOpportunity._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/opportunities/${selectedOpportunity._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

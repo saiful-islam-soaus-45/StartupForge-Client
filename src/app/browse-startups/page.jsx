@@ -18,7 +18,7 @@ export default function BrowseStartups() {
         const email = session?.user?.email || "";
 
         const res = await fetch(
-          `http://localhost:5000/api/public/startups?email=${email}`
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/public/startups?email=${email}`
         );
 
         const resData = await res.json();

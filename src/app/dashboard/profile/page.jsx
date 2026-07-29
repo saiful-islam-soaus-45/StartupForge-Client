@@ -19,6 +19,7 @@ export default function DashboardProfilePage() {
   // সেশন থেকে ইউজার ডেটা পাওয়া গেলে লোকাল স্টেটে সেট করা
   useEffect(() => {
     if (session?.user) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setName(session.user.name || "");
       setImage(session.user.image || "");
     }
@@ -63,7 +64,7 @@ export default function DashboardProfilePage() {
     try {
       // ১. ব্যাকএন্ড ডেটাবেজে আপডেট রিকোয়েস্ট পাঠানো
       const res = await fetch(
-        `http://localhost:5000/api/profile/${session.user.email}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/profile/${session.user.email}`,
         {
           method: "PATCH",
           headers: {

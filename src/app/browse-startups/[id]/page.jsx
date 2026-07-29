@@ -70,7 +70,7 @@ const openApplyModal = (opp) => {
     if (!id) return;
     const fetchStartupDetails = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/public/startups/${id}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/public/startups/${id}`);
         
         if (!res.ok) {
           throw new Error("Failed to fetch startup details from server");
@@ -119,7 +119,7 @@ const openApplyModal = (opp) => {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/applications", {
+      const res = await fetch("${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(applicationData),
