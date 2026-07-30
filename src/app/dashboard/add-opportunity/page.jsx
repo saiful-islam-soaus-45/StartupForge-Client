@@ -75,7 +75,7 @@ export default function AddOpportunityPage() {
     try {
       const {data: tokenData} = await authClient.token();
 
-      const res = await fetch("${process.env.NEXT_PUBLIC_SERVER_URL}/api/opportunities", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/opportunities`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${tokenData?.token}`,

@@ -186,7 +186,7 @@ export default function BrowseOpportunities() {
 
     try {
       // 👈 এখানেও credentials: "include" দেওয়া হয়েছে
-      const res = await fetch("${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications`, {
         method: "POST",
        
         headers: {

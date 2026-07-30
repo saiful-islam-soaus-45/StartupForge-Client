@@ -150,7 +150,7 @@ export default function FeaturedOpportunities() {
     };
 
     try {
-      const res = await fetch("${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

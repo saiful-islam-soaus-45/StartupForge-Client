@@ -17,7 +17,7 @@ export default function TransactionsPage() {
         try {
             const {data: tokenData} = await authClient.token();
             const res = await fetch(
-                "${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/transactions",
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/transactions`,
                 {
                     headers: {
                         'Authorization': `Bearer ${tokenData?.token}`

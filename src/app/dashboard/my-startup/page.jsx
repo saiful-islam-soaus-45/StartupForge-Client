@@ -90,7 +90,7 @@ export default function MyStartupPage() {
 
     const url = isEditing 
       ? `${process.env.NEXT_PUBLIC_SERVER_URL}/api/startups/${startup._id}`
-      : "${process.env.NEXT_PUBLIC_SERVER_URL}/api/startups";
+      : `${process.env.NEXT_PUBLIC_SERVER_URL}/api/startups`;
       
     const method = isEditing ? "PUT" : "POST";
 

@@ -16,7 +16,7 @@ export default function ManageUsersPage() {
     const fetchUsers = async () => {
         try {   
             const {data: tokenData} = await authClient.token();
-            const res = await fetch("${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users`, {
                 headers: {
                     'Authorization': `Bearer ${tokenData?.token}`
                 }
