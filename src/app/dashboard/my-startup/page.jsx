@@ -89,8 +89,8 @@ export default function MyStartupPage() {
     setStatusMsg({ type: "", text: "" });
 
     const url = isEditing 
-      ? `${process.env.NEXT_PUBLIC_SERVER_URL}/api/startups/${startup._id}`
-      : `${process.env.NEXT_PUBLIC_SERVER_URL}/api/startups`;
+      ? `https://startupforge-server-alpha.vercel.app/api/startups/${startup._id}`
+      : `https://startupforge-server-alpha.vercel.app/api/startups`;
       
     const method = isEditing ? "PUT" : "POST";
 
