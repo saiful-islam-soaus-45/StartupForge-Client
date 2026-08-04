@@ -11,11 +11,9 @@ export default function CollaboratorSidebar({ user }) {
   const currentPath = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   
-  // 🎯 ডাইনামিক প্রোফাইল স্টেট (লাইভ ডাটা সিঙ্কের জন্য)
   const [dbProfile, setDbProfile] = useState({ name: "", image: "" });
   const userEmail = user?.email || "";
 
-  // ডাটাবেজ থেকে লাইভ প্রোফাইল ডাটা লোড করা
   useEffect(() => {
     if (!userEmail) return;
 
@@ -54,18 +52,16 @@ export default function CollaboratorSidebar({ user }) {
     { 
       id: "profile", 
       label: "Profile", 
-      route: "/dashboard/profile", // 👈 এখানে ক্লিক করলে প্রফাইল এডিট পেজে চলে যাবে
+      route: "/dashboard/profile", 
       icon: <LuUser className="w-5 h-5" />
     },
   ];
 
-  // ডিসপ্লে নাম এবং ইমেজের জন্য ফলব্যাক নির্ধারণ
   const displayName = dbProfile.name || user?.name || "Guest Collaborator";
   const displayImage = dbProfile.image || user?.image || "";
 
   return (
     <>
-      {/* 📱 মোবাইল ও ট্যাবলেটের হোয়াইট টপবার */}
       <div className="lg:hidden w-full bg-white text-slate-800 p-4 flex items-center justify-between border-b border-slate-100 sticky top-0 z-50">
         <div className="flex flex-col items-start gap-1">
           <button 
@@ -91,14 +87,12 @@ export default function CollaboratorSidebar({ user }) {
         </button>
       </div>
 
-      {/* 💻 ক্লিন হোয়াইট সাইডবার */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 w-72 bg-white text-slate-600 flex flex-col border-r border-slate-100 font-sans transition-transform duration-300 ease-in-out
         lg:translate-x-0 lg:static lg:h-screen
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
       `}>
         
-        {/* ⚡ টপ হেডার সেকশন */}
         <div className="p-5 border-b border-slate-50 flex flex-col items-start gap-3">
           <button 
             onClick={() => router.push("/")}
@@ -116,7 +110,6 @@ export default function CollaboratorSidebar({ user }) {
           </div>
         </div>
 
-        {/* 👤 ডাইনামিক ইউজার প্রোফাইল সেকশন */}
         <div className="p-5 border-b border-slate-50 flex items-center gap-3">
           {displayImage ? (
             <img 
@@ -140,7 +133,6 @@ export default function CollaboratorSidebar({ user }) {
           </div>
         </div>
 
-        {/* 📋 মেইন মেনু আইটেমস */}
         <nav className="p-3 flex-1 space-y-1.5 overflow-y-auto">
           {menuItems.map((item) => {
             const isActive = currentPath === item.route;
@@ -165,7 +157,6 @@ export default function CollaboratorSidebar({ user }) {
         </nav>
       </aside>
 
-      {/* 📱 ব্যাকড্রপ ওভারলে */}
       {isOpen && (
         <div 
           onClick={() => setIsOpen(false)} 

@@ -56,7 +56,7 @@ export default function BrowseOpportunities() {
         // 👈 credentials: "include" ব্যবহার করা হয়েছে যাতে কুকি/টোকেন ব্যাকএন্ডে যায়
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/opportunities?${params.toString()}`, {
           method: "GET",
-          
+
           headers: {
             "Content-Type": "application/json",
           },
@@ -172,23 +172,36 @@ export default function BrowseOpportunities() {
 
     setIsSubmitting(true);
 
+    // const applicationData = {
+    //   opportunityId: selectedOpp._id,
+    //   startupId: selectedOpp.startupId,
+    //   roleTitle: selectedOpp.roleTitle,
+    //   founderEmail: selectedOpp.founderEmail,
+    //   applicantEmail,
+    //   motivationMessage,
+    //   portfolioLink,
+    //   appliedDate: new Date(),
+    //   status: "Pending"
+    // };
+    console.log("Selected Opp:", selectedOpp);
+
     const applicationData = {
-      opportunityId: selectedOpp._id,
-      startupId: selectedOpp.startupId,
-      roleTitle: selectedOpp.roleTitle,
-      founderEmail: selectedOpp.founderEmail,
+      applicationType: "opportunity",
+      startupId: selectedOpp?.startupId,
+      opportunityId: selectedOpp?._id,
+      roleTitle: selectedOpp?.roleTitle,
+      founderEmail: selectedOpp?.founderEmail,
       applicantEmail,
-      motivationMessage,
       portfolioLink,
-      appliedDate: new Date(),
-      status: "Pending"
+      motivationMessage,
     };
 
+    console.log("Application Data:", applicationData);
+
     try {
-      // 👈 এখানেও credentials: "include" দেওয়া হয়েছে
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications`, {
         method: "POST",
-       
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -202,9 +215,10 @@ export default function BrowseOpportunities() {
         showToast(`Successfully applied for ${selectedOpp.roleTitle}! 🎉`);
       } else {
         if (data.message === "You have already applied for this opportunity.") {
-          alert("❌ You have already applied for this opportunity.");
+          toast.error("❌ You have already applied for this startup.");
+
         } else {
-          alert(data.message || "Failed to apply.");
+           toast.error(data.message || "Failed to apply.");
         }
       }
     } catch (error) {
@@ -304,11 +318,10 @@ export default function BrowseOpportunities() {
                       handleWorkTypeToggle(type);
                       setPage(1);
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${
-                      isSelected
-                        ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-                        : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-                    }`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${isSelected
+                      ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
+                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                      }`}
                   >
                     {type}
                   </button>
@@ -330,11 +343,10 @@ export default function BrowseOpportunities() {
                       handleCommitmentToggle(level);
                       setPage(1);
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${
-                      isSelected
-                        ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-                        : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-                    }`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${isSelected
+                      ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
+                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                      }`}
                   >
                     {level}
                   </button>
@@ -430,11 +442,10 @@ export default function BrowseOpportunities() {
                 <button
                   onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                   disabled={page === 1}
-                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${
-                    page === 1
-                      ? "cursor-not-allowed bg-slate-100 text-slate-400"
-                      : "border border-slate-200 bg-white hover:border-indigo-500 hover:text-indigo-600"
-                  }`}
+                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${page === 1
+                    ? "cursor-not-allowed bg-slate-100 text-slate-400"
+                    : "border border-slate-200 bg-white hover:border-indigo-500 hover:text-indigo-600"
+                    }`}
                 >
                   ← Previous
                 </button>
@@ -444,11 +455,10 @@ export default function BrowseOpportunities() {
                     <button
                       key={index}
                       onClick={() => setPage(index + 1)}
-                      className={`h-9 w-9 rounded-lg text-xs font-bold transition sm:h-10 sm:w-10 sm:text-sm ${
-                        page === index + 1
-                          ? "bg-indigo-600 text-white shadow-md"
-                          : "border border-slate-200 bg-white text-slate-700 hover:border-indigo-500 hover:text-indigo-600"
-                      }`}
+                      className={`h-9 w-9 rounded-lg text-xs font-bold transition sm:h-10 sm:w-10 sm:text-sm ${page === index + 1
+                        ? "bg-indigo-600 text-white shadow-md"
+                        : "border border-slate-200 bg-white text-slate-700 hover:border-indigo-500 hover:text-indigo-600"
+                        }`}
                     >
                       {index + 1}
                     </button>
@@ -458,11 +468,10 @@ export default function BrowseOpportunities() {
                 <button
                   onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
                   disabled={page === totalPages}
-                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${
-                    page === totalPages
-                      ? "cursor-not-allowed bg-slate-100 text-slate-400"
-                      : "border border-slate-200 bg-white hover:border-indigo-500 hover:text-indigo-600"
-                  }`}
+                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${page === totalPages
+                    ? "cursor-not-allowed bg-slate-100 text-slate-400"
+                    : "border border-slate-200 bg-white hover:border-indigo-500 hover:text-indigo-600"
+                    }`}
                 >
                   Next →
                 </button>
@@ -517,11 +526,10 @@ export default function BrowseOpportunities() {
                     value={applicantEmail}
                     onChange={(e) => setApplicantEmail(e.target.value)}
                     disabled={!!applicantEmail}
-                    className={`w-full rounded-xl border px-3.5 py-2.5 text-sm font-medium shadow-sm outline-none transition ${
-                      applicantEmail
-                        ? "bg-slate-50 text-slate-400 border-slate-200/80 cursor-not-allowed font-semibold"
-                        : "bg-white text-slate-800 border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                    }`}
+                    className={`w-full rounded-xl border px-3.5 py-2.5 text-sm font-medium shadow-sm outline-none transition ${applicantEmail
+                      ? "bg-slate-50 text-slate-400 border-slate-200/80 cursor-not-allowed font-semibold"
+                      : "bg-white text-slate-800 border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                      }`}
                     required
                   />
                 </div>

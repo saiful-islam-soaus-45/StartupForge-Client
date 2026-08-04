@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
-import { authClient } from "@/lib/auth-client"; // আপনার Better-Auth ক্লায়েন্ট পাথ
+import { authClient } from "@/lib/auth-client"; 
 
 export default function LoginForm() {
   const router = useRouter();
@@ -18,17 +18,14 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  // ১. ইউজার অন্য কোনো পেজ থেকে রিডাইরেক্ট হয়ে আসলে সেই পেজ, নতুবা ডিফল্ট হোমপেজে ('/') রিডাইরেক্ট করবে
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
-  // ২. Credential (ইমেইল ও পাসওয়ার্ড) লগইন হ্যান্ডলার
   const handleCredentialLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg("");
 
     try {
-      // ✅ আগে check করবে user blocked কিনা
       const check = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/check-user-status?email=${email}`
       );
@@ -41,7 +38,6 @@ export default function LoginForm() {
         return;
       }
 
-      // ✅ Blocked না হলে login করবে
       await authClient.signIn.email(
         {
           email,
@@ -85,7 +81,6 @@ export default function LoginForm() {
 
   return (
     <div className="flex min-h-[85vh] items-center justify-center bg-slate-50/50 px-4 py-8">
-      {/* ফ্রেমার মোশন দিয়ে কার্ড অ্যানিমেশন */}
       <motion.div
         initial={{ opacity: 0, y: 25, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -93,7 +88,6 @@ export default function LoginForm() {
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="w-full max-w-[400px] rounded-2xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-100/50"
       >
-        {/* লোগো ও হেডার */}
         <div className="flex flex-col items-center text-center">
           <motion.div 
             initial={{ scale: 0.5 }}
@@ -115,7 +109,6 @@ export default function LoginForm() {
           </p>
         </div>
 
-        {/* এরর মেসেজ */}
         {errorMsg && (
           <motion.div 
             initial={{ opacity: 0, height: 0 }}
@@ -126,7 +119,6 @@ export default function LoginForm() {
           </motion.div>
         )}
 
-        {/* ডিভাইডার */}
         <div className="relative my-4">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
             <div className="w-full border-t border-slate-100" />
@@ -136,9 +128,7 @@ export default function LoginForm() {
           </div>
         </div>
 
-        {/* সাইনইন ফর্ম */}
         <form onSubmit={handleCredentialLogin} className="space-y-3.5">
-          {/* ইমেইল ফিল্ড */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
             <div className="relative rounded-xl shadow-sm">
@@ -156,7 +146,6 @@ export default function LoginForm() {
             </div>
           </div>
 
-          {/* পাসওয়ার্ড ফিল্ড */}
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="block text-xs font-semibold text-slate-700">Password</label>
@@ -186,7 +175,6 @@ export default function LoginForm() {
             </div>
           </div>
 
-          {/* সাবমিট বাটন */}
           <div className="pt-1">
             <motion.button
               whileHover={{ scale: 1.01 }}
@@ -208,7 +196,6 @@ export default function LoginForm() {
               )}
             </motion.button>
             
-            {/* Google দিয়ে ওয়ান-ক্লিক সাইনইন */}
             <div className="mt-4">
               <motion.button
                 whileHover={{ scale: 1.01 }}
@@ -224,7 +211,6 @@ export default function LoginForm() {
           </div>
         </form>
 
-        {/* সাইন-আপ করার লিংক */}
         <p className="mt-5 text-center text-xs font-medium text-gray-400">
           Don&apos;t have an account?{" "}
           <Link href="/auth/signup" className="font-semibold text-indigo-600 hover:text-indigo-500 transition">

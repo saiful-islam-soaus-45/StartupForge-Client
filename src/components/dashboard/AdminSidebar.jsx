@@ -22,12 +22,11 @@ export default function AdminSidebar() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // এখানে আপনার প্রজেক্ট অনুযায়ী রাউটগুলো পরিবর্তন করে নিতে পারেন (যেমন: /admin)
   const menuItems = [
     {
       id: "overview",
       label: "Overview",
-      route: "/dashboard", // ✅ এখানে /dashboard/admin না
+      route: "/dashboard", 
       icon: <LuLayoutDashboard size={20} />,
     },
     {

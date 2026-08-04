@@ -16,20 +16,16 @@ export default function FeaturedOpportunities() {
   // Better Auth session hook
   const { data: session } = authClient.useSession();
 
-  // Email state
   const [applicantEmail, setApplicantEmail] = useState("");
 
-  // Modal & Form States
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOpp, setSelectedOpp] = useState(null);
   const [portfolioLink, setPortfolioLink] = useState("");
   const [motivationMessage, setMotivationMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Toast Notification State
   const [toastMessage, setToastMessage] = useState("");
 
-  // Fetch Latest 6 Opportunities
   useEffect(() => {
     const fetchOpportunities = async () => {
       setLoading(true);
@@ -138,15 +134,16 @@ export default function FeaturedOpportunities() {
     setIsSubmitting(true);
 
     const applicationData = {
+      applicationType: "opportunity",
+
       opportunityId: selectedOpp._id,
       startupId: selectedOpp.startupId,
       roleTitle: selectedOpp.roleTitle,
       founderEmail: selectedOpp.founderEmail,
+
       applicantEmail,
-      motivationMessage,
       portfolioLink,
-      appliedDate: new Date(),
-      status: "Pending"
+      motivationMessage,
     };
 
     try {
@@ -154,7 +151,7 @@ export default function FeaturedOpportunities() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          
+
         },
         body: JSON.stringify(applicationData),
       });
@@ -166,9 +163,9 @@ export default function FeaturedOpportunities() {
         showToast(`Successfully applied for ${selectedOpp.roleTitle}! 🎉`);
       } else {
         if (data.message === "You have already applied for this opportunity.") {
-          alert("❌ You have already applied for this opportunity.");
+          toast.error("❌ You have already applied for this startup.");
         } else {
-          alert(data.message || "Failed to apply.");
+          toast.error(data.message || "Failed to apply.");
         }
       }
     } catch (error) {
@@ -305,7 +302,7 @@ export default function FeaturedOpportunities() {
               href="/opportunities"
               className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-800 transition group"
             >
-              View All Opportunities 
+              View All Opportunities
               <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
             </Link>
           </motion.div>
@@ -358,11 +355,10 @@ export default function FeaturedOpportunities() {
                     value={applicantEmail}
                     onChange={(e) => setApplicantEmail(e.target.value)}
                     disabled={!!applicantEmail}
-                    className={`w-full rounded-xl border px-3.5 py-2.5 text-sm font-medium shadow-sm outline-none transition ${
-                      applicantEmail
-                        ? "bg-slate-50 text-slate-400 border-slate-200/80 cursor-not-allowed font-semibold"
-                        : "bg-white text-slate-800 border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                    }`}
+                    className={`w-full rounded-xl border px-3.5 py-2.5 text-sm font-medium shadow-sm outline-none transition ${applicantEmail
+                      ? "bg-slate-50 text-slate-400 border-slate-200/80 cursor-not-allowed font-semibold"
+                      : "bg-white text-slate-800 border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                      }`}
                     required
                   />
                 </div>

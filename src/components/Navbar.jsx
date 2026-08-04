@@ -5,20 +5,18 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FiMenu, FiX, FiChevronDown, FiUser, FiLogOut } from "react-icons/fi";
 import { RxDashboard } from "react-icons/rx";
-import { authClient } from "@/lib/auth-client"; // আপনার Better-Auth ক্লায়েন্ট
+import { authClient } from "@/lib/auth-client";
 
 export default function Navbar() {
   const router = useRouter();
-  const pathname = usePathname(); // ১. সব হুক শুরুতে থাকবে
+  const pathname = usePathname();
   const dropdownRef = useRef(null);
-  
-  const [isOpen, setIsOpen] = useState(false); // মোবাইল মেনুর জন্য
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // প্রোফাইল ড্রপডাউনের জন্য
 
-  // ২. সেশন ডেটা চেক করার জন্য Better-Auth হুক (সবসময় কন্ডিশনের উপরে থাকবে)
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const { data: session } = authClient.useSession();
 
-  // ৩. ড্রপডাউনের বাইরে ক্লিক করলে যেন ড্রপডাউন বন্ধ হয়ে যায়
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -29,19 +27,17 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 🎯 ৪. ড্যাশবোর্ডে নেববার রিমুভ করার কন্ডিশন (সব হুক ডিফাইন করার পর নিচে বসবে)
   if (pathname.includes("dashboard")) {
     return null;
   }
 
-  // লগআউট হ্যান্ডলার ফাংশন
   const handleLogout = async () => {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
           setIsDropdownOpen(false);
           setIsOpen(false);
-          router.push("/auth/login"); // লগআউট হলে লগইন পেজে নিয়ে যাবে
+          router.push("/auth/login");
           router.refresh();
         },
       },
@@ -51,7 +47,7 @@ export default function Navbar() {
   return (
     <nav className="w-full bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-        
+
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600">
@@ -65,20 +61,20 @@ export default function Navbar() {
 
         {/* Navigation - Desktop */}
         <div className="hidden items-center gap-10 text-[15px] font-medium text-gray-700 md:flex">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className={`transition font-bold ${pathname === "/" ? "text-indigo-600" : "hover:text-indigo-600"}`}
           >
             Home
           </Link>
-          <Link 
-            href="/browse-startups" 
+          <Link
+            href="/browse-startups"
             className={`transition font-bold ${pathname === "/browse-startups" ? "text-indigo-600" : "hover:text-indigo-600"}`}
           >
             Browse Startups
           </Link>
-          <Link 
-            href="/opportunities" 
+          <Link
+            href="/opportunities"
             className={`transition font-bold ${pathname === "/opportunities" ? "text-indigo-600" : "hover:text-indigo-600"}`}
           >
             Browse Opportunities
@@ -97,9 +93,9 @@ export default function Navbar() {
               </Link>
             </>
           ) : (
-            /* 🎯 ডাইনামিক প্রোফাইল ড্রপডাউন বাটন */
+
             <div className="relative" ref={dropdownRef}>
-              <button 
+              <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white p-1.5 pr-3 hover:bg-gray-50 transition cursor-pointer"
               >
@@ -112,7 +108,6 @@ export default function Navbar() {
                 <FiChevronDown size={14} className={`text-slate-400 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`} />
               </button>
 
-              {/* 🎯 ড্রপডাউন মেনু কার্ড */}
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-slate-100 bg-white p-2.5 shadow-xl shadow-slate-200/80 animate-in fade-in slide-in-from-top-2 duration-150">
                   <div className="px-3 py-2">
@@ -121,29 +116,29 @@ export default function Navbar() {
                       {session.user.role || "User"}
                     </p>
                   </div>
-                  
+
                   <hr className="my-1.5 border-slate-100" />
-                  
+
                   <div className="space-y-0.5">
-                    <Link 
-                      href="/dashboard" 
+                    <Link
+                      href="/dashboard"
                       onClick={() => setIsDropdownOpen(false)}
                       className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer"
                     >
                       <RxDashboard size={16} className="text-slate-400" />
                       Dashboard
                     </Link>
-                    
-                    <Link 
-                      href="/profile" 
+
+                    <Link
+                      href="/profile"
                       onClick={() => setIsDropdownOpen(false)}
                       className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer"
                     >
                       <FiUser size={16} className="text-slate-400" />
                       Profile
                     </Link>
-                    
-                    <button 
+
+                    <button
                       onClick={handleLogout}
                       className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition text-left cursor-pointer"
                     >
@@ -169,23 +164,23 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white px-6 py-6 space-y-5 shadow-inner">
           <div className="flex flex-col space-y-4 font-medium text-gray-700">
-            <Link 
-              href="/" 
-              onClick={() => setIsOpen(false)} 
+            <Link
+              href="/"
+              onClick={() => setIsOpen(false)}
               className={`transition py-1 text-md font-bold ${pathname === "/" ? "text-indigo-600" : "hover:text-indigo-600"}`}
             >
               Home
             </Link>
-            <Link 
-              href="/browse-startups" 
-              onClick={() => setIsOpen(false)} 
+            <Link
+              href="/browse-startups"
+              onClick={() => setIsOpen(false)}
               className={`transition py-1 text-md font-bold ${pathname === "/browse-startups" ? "text-indigo-600" : "hover:text-indigo-600"}`}
             >
               Browse Startups
             </Link>
-            <Link 
-              href="/opportunities" 
-              onClick={() => setIsOpen(false)} 
+            <Link
+              href="/opportunities"
+              onClick={() => setIsOpen(false)}
               className={`transition py-1 text-md font ${pathname === "/opportunities" ? "text-indigo-600" : "hover:text-indigo-600"}`}
             >
               Browse Opportunities

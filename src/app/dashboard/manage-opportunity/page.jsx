@@ -24,10 +24,9 @@ console.log(session?.user?.id);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [opportunityToDelete, setOpportunityToDelete] = useState(null);
 
-  // 🔔 Toast Notification State
+  //  Toast Notification State
   const [notification, setNotification] = useState("");
 
-  // 📥 ডাটাবেজ থেকে সব অপরচুনিটি ফেচ করার ফাংশন
   const fetchOpportunities = async () => {
   if (!userId) return;
 
@@ -62,13 +61,11 @@ console.log(session?.user?.id);
   }
 }, [userId]);
 
-  // 🗑️ কাস্টম মডাল ওপেন করার হ্যান্ডলার
   const openDeleteModal = (opp) => {
     setOpportunityToDelete(opp);
     setIsDeleteModalOpen(true);
   };
 
-  // 💣 মঙ্গোডিবি থেকে ফাইনাল ডিলিট করার হ্যান্ডলার
   const handleConfirmDelete = async () => {
     if (!opportunityToDelete) return;
 
@@ -97,13 +94,11 @@ console.log(session?.user?.id);
     }
   };
 
-  // এডিট মডাল ওপেন হ্যান্ডলার
   const openEditModal = (opp) => {
     setSelectedOpportunity({ ...opp });
     setIsEditModalOpen(true);
   };
 
-  // 📝 মঙ্গোডিবিতে আপডেট করার সাবমিট হ্যান্ডলার
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -317,7 +312,6 @@ console.log(session?.user?.id);
         )}
       </AnimatePresence>
 
-      {/* 🗑️ [🎯 NEW] Huhuhi Image Layout: Custom Delete Confirmation Modal */}
       <AnimatePresence>
         {isDeleteModalOpen && (
           <motion.div

@@ -16,7 +16,6 @@ export default function DashboardProfilePage() {
   // ImgBB API Key
   const IMGBB_API_KEY = process.env.NEXT_PUBLIC_IMGBB_API_KEY || "970abc38b137d87cc59368c9a1e16fde";
 
-  // সেশন থেকে ইউজার ডেটা পাওয়া গেলে লোকাল স্টেটে সেট করা
   useEffect(() => {
     if (session?.user) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -25,7 +24,6 @@ export default function DashboardProfilePage() {
     }
   }, [session]);
 
-  // ImgBB-তে ইমেজ আপলোড হ্যান্ডলার
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -62,11 +60,11 @@ export default function DashboardProfilePage() {
     setLoading(true);
 
     try {
-      // ১. ব্যাকএন্ড ডেটাবেজে আপডেট রিকোয়েস্ট পাঠানো
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/profile/${session.user.email}`,
         {
-          method: "PATCH",
+          method: "put",
           headers: {
             "Content-Type": "application/json",
           },
@@ -80,7 +78,6 @@ export default function DashboardProfilePage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // ২. Better-auth সেশন রিফ্রেশ করার চেষ্টা
         try {
           await authClient.getSession();
         } catch (err) {
@@ -89,7 +86,6 @@ export default function DashboardProfilePage() {
 
         alert("Profile Updated Successfully!");
         
-        // ৩. মেইন প্রোফাইল পেজে রিডাইরেক্ট করে পেজ রিফ্রেশ করা
         window.location.href = "/profile";
       } else {
         alert(data.message || "Failed to update profile");
@@ -142,14 +138,13 @@ export default function DashboardProfilePage() {
           />
         </div>
 
-        {/* Profile Image Uploader & URL */}
         <div>
           <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
             <FiImage size={14} /> Profile Picture
           </label>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-            {/* ফাইল আপলোড বাটন */}
+
             <label className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-dashed border-slate-300 hover:border-indigo-600 transition bg-slate-50/30 cursor-pointer text-sm font-medium text-slate-600">
               <input
                 type="file"
@@ -171,7 +166,7 @@ export default function DashboardProfilePage() {
               )}
             </label>
 
-            {/* ইউআরএল ফিল্ড */}
+
             <input
               type="url"
               value={image}

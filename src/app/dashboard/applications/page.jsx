@@ -11,7 +11,6 @@ export default function ApplicationsPage() {
   const [notification, setNotification] = useState("");
   const { data: session } = authClient.useSession();
 
-  // 🔄 API থেকে অ্যাপ্লিকেশন ডেটা লোড করা
   useEffect(() => {
   if (!session?.user?.email) return;
 
@@ -31,7 +30,6 @@ export default function ApplicationsPage() {
     });
 }, [session]);
 
-  // 🎯 স্ট্যাটাস আপডেট হ্যান্ডলার (Accepted / Rejected)
   const handleStatusUpdate = async (id, newStatus) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/applications/${id}`, {
@@ -94,13 +92,12 @@ export default function ApplicationsPage() {
 
   return (
     <motion.div className="space-y-6" variants={containerVariants} initial="hidden" animate="show">
-      {/* 🚀 Header */}
+
       <motion.div className="border-b border-slate-100 pb-5" variants={itemVariants}>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">Incoming Applications</h1>
         <p className="text-sm text-slate-500">Review and manage incoming talent applications for your active startup opportunities.</p>
       </motion.div>
 
-      {/* 🔔 Toast Notification */}
       <AnimatePresence>
         {notification && (
           <motion.div 
@@ -115,7 +112,6 @@ export default function ApplicationsPage() {
         )}
       </AnimatePresence>
 
-      {/* 📊 Applications Table */}
       <motion.div variants={itemVariants} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left text-sm text-slate-500">

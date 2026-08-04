@@ -18,13 +18,11 @@ export default function AddOpportunityPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState({ type: "", text: "" });
 
-  // ইউজার ও অপরচুনিটি কাউন্ট স্টেট
   const [userPlan, setUserPlan] = useState("free");
   const [opportunityCount, setOpportunityCount] = useState(0);
   const [isCheckingLimit, setIsCheckingLimit] = useState(true);
 
-  // 🔴 আপনার আসল ইউজার আইডি এখানে সেট করুন (যেমন: লোকালস্টোরেজ, সেশন বা প্রপস থেকে এনে)
-  // আপনার ডাটাবেজ অনুযায়ী টেস্ট ইউজার আইডি: "6a63b866eb5492714bc29c12" এবং ইমেইল: "s@gmail.com"
+ 
   const { data: session, isPending } = useSession();
 
   const currentUser = {
@@ -32,7 +30,6 @@ export default function AddOpportunityPage() {
     email: session?.user?.email,
   };
 
-  // পেজ লোড হওয়ার সময় ব্যাকএন্ড থেকে ইউজারের লিমিট ও প্ল্যান চেক করা
   useEffect(() => {
     async function fetchUserLimit() {
       try {
@@ -65,7 +62,6 @@ export default function AddOpportunityPage() {
     setIsLoading(true);
     setStatusMsg({ type: "", text: "" });
 
-    // অপরচুনিটি ডাটার সাথে ইউজারের সঠিক `userId` এবং `founderEmail` যুক্ত করা হলো
     const payload = {
       ...formData,
       userId: currentUser.userId,
@@ -89,7 +85,7 @@ export default function AddOpportunityPage() {
       if (data.success) {
         setIsLoading(false);
         setStatusMsg({ type: "success", text: "Opportunity added successfully to the marketplace!" });
-        setOpportunityCount((prev) => prev + 1); // সফলভাবে পোস্ট হওয়ার পর কাউন্ট ১ বাড়িয়ে দেওয়া
+        setOpportunityCount((prev) => prev + 1); 
         setFormData({
           roleTitle: "",
           requiredSkills: "",
@@ -120,7 +116,6 @@ export default function AddOpportunityPage() {
     show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 110 } },
   };
 
-  // কন্ডিশন: ইউজার ফ্রি প্ল্যানে থাকলে এবং ৩টি বা তার বেশি পোস্ট করলে ব্যানার দেখাবে
   const isLimitExceeded = userPlan === "free" && opportunityCount >= 3;
 
   if (isCheckingLimit) {
@@ -139,7 +134,6 @@ export default function AddOpportunityPage() {
       animate="show"
     >
 
-      {/* 🚀 Header */}
       <motion.div className="border-b border-slate-100 dark:border-slate-800 pb-5" variants={itemVariants}>
         <h1 className="text-3xl font-bold tracking-tight">Add Opportunity</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -147,7 +141,6 @@ export default function AddOpportunityPage() {
         </p>
       </motion.div>
 
-      {/* Status Message Alert */}
       <AnimatePresence mode="wait">
         {statusMsg.text && (
           <motion.div
@@ -165,7 +158,6 @@ export default function AddOpportunityPage() {
         )}
       </AnimatePresence>
 
-      {/* ⚡ Premium Required Banner (লিমিট শেষ হলে এটি দেখাবে) */}
       {isLimitExceeded ? (
         <motion.div
           variants={itemVariants}
@@ -188,14 +180,14 @@ export default function AddOpportunityPage() {
           </div>
         </motion.div>
       ) : (
-        /* 📝 Form Card (লিমিট শেষ না হলে ফর্ম দেখাবে) */
+
         <motion.div
           variants={itemVariants}
           className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-6 md:p-8 shadow-sm"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
 
-            {/* 1. Role Title */}
+
             <motion.div className="space-y-2" variants={itemVariants}>
               <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                 <FiBriefcase className="text-slate-400" />
@@ -212,7 +204,7 @@ export default function AddOpportunityPage() {
               />
             </motion.div>
 
-            {/* 2. Required Skills */}
+
             <motion.div className="space-y-2" variants={itemVariants}>
               <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                 <FiCpu className="text-slate-400" />
@@ -229,10 +221,9 @@ export default function AddOpportunityPage() {
               />
             </motion.div>
 
-            {/* Two Column Layout for Dropdowns */}
+
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
 
-              {/* 3. Work Type */}
               <motion.div className="space-y-2" variants={itemVariants}>
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <FiBriefcase className="text-slate-400" />
@@ -250,7 +241,6 @@ export default function AddOpportunityPage() {
                 </select>
               </motion.div>
 
-              {/* 4. Commitment Level */}
               <motion.div className="space-y-2" variants={itemVariants}>
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <FiClock className="text-slate-400" />
@@ -271,7 +261,6 @@ export default function AddOpportunityPage() {
 
             </div>
 
-            {/* 5. Deadline */}
             <motion.div className="space-y-2" variants={itemVariants}>
               <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                 <FiCalendar className="text-slate-400" />
@@ -287,7 +276,6 @@ export default function AddOpportunityPage() {
               />
             </motion.div>
 
-            {/* Submit Button */}
             <motion.div
               variants={itemVariants}
               whileHover={{ scale: 1.01 }}

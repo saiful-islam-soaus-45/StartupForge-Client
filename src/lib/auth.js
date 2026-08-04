@@ -1,4 +1,3 @@
-// path: lib/auth.js
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
@@ -27,53 +26,50 @@ export const auth = betterAuth({
         defaultValue: "free",
         input: false,
       },
-
       status: {
         type: "string",
         defaultValue: "active",
         input: false,
       },
     },
+    // additionalFields: {
+    //         role: {
+    //             default: "collaborator"
+    //         },
+    //         plan: {
+    //             default: 'founder'
+    //         }
+    //     }
   },
   hooks: {
-  before: async (ctx) => {
+    before: async (ctx) => {
+      if (ctx.path.includes("/sign-in")) {
+        const email = ctx.body?.email;
 
-    if (ctx.path.includes("/sign-in")) {
+        const user = await db.collection("user").findOne({ email });
 
-      const email = ctx.body?.email;
-
-      const user = await db
-        .collection("user")
-        .findOne({ email });
-
-      if (user?.status === "blocked") {
-        throw new Error(
-          "Your account has been blocked."
-        );
+        if (user?.status === "blocked") {
+          throw new Error("Your account has been blocked.");
+        }
       }
 
-    }
-
-    return ctx;
+      return ctx;
+    },
   },
-},
 
   session: {
     cookieCache: {
       enabled: true,
       maxAge: 7 * 60 * 60,
       strategy: "jwt",
-
-    }
+    },
   },
   socialProviders: {
-        google: { 
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET ,
-        }, 
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     },
+  },
 
-  plugins: [jwt()]
-
+  plugins: [jwt()],
 });
-

@@ -133,7 +133,7 @@ export default function MyApplicationsPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-600">
                   {applications.map((app) => {
-                    // 🔍 পপুলেটেড অবজেক্ট বা র ডেটা স্ট্রাকচার সেফলি রেন্ডার করা হচ্ছে
+
                     const roleName =
                       app.roleTitle ||
                       app.opportunityDetails?.roleTitle ||

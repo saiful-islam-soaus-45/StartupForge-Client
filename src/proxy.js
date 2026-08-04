@@ -21,5 +21,5 @@ export async function proxy(request) {
 // export default function proxy(request: NextRequest) { ... }
 
 export const config = {
-  matcher: ['/browse-startups', '/opportunities'],
+  matcher: ['/browse-startups', '/browse-startups/:path', '/opportunities'],
 };

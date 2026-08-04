@@ -89,8 +89,8 @@ export default function MyStartupPage() {
     setStatusMsg({ type: "", text: "" });
 
     const url = isEditing 
-      ? `https://startupforge-server-alpha.vercel.app/api/startups/${startup._id}`
-      : `https://startupforge-server-alpha.vercel.app/api/startups`;
+      ? `${process.env.NEXT_PUBLIC_SERVER_URL}/api/startups/${startup._id}`
+      : `${process.env.NEXT_PUBLIC_SERVER_URL}/api/startups`;
       
     const method = isEditing ? "PUT" : "POST";
 
@@ -105,7 +105,7 @@ export default function MyStartupPage() {
         method: method,
         headers: { 
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${tokenData?.token}`,
+          // 'Authorization': `Bearer ${tokenData?.token}`,
          },
         body: JSON.stringify(payload),
       });
@@ -129,11 +129,11 @@ export default function MyStartupPage() {
 
   const handleEditClick = (e) => {
     e.preventDefault();
-    e.target.blur(); // বাটন ক্লিক হওয়ার পর ফোকাস রিমুভ করার জন্য
+    e.target.blur(); 
     setIsEditing(true);
   };
 
-  // ডিলিট কনফার্ম করার পর আসল এপিআই কল
+
   const handleConfirmDelete = async () => {
     setShowDeleteConfirm(false);
     try {
@@ -199,14 +199,14 @@ export default function MyStartupPage() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="flex gap-2"
             >
-              {/* 🎯 Edit বাটন ফিক্সড (আউটলাইন ও ফোকাস রিং রিমুভড) */}
+
               <button 
                 onClick={handleEditClick} 
                 className="flex items-center gap-2 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-2 rounded-xl text-sm font-semibold cursor-pointer shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition focus:outline-none focus:ring-0 select-none active:scale-95"
               >
                 <FiEdit /> Edit
               </button>
-              {/* 🎯 Delete বাটনে ক্লিক করলে এখন পারমিশন বক্স আসবে */}
+
               <button 
                 onClick={() => setShowDeleteConfirm(true)} 
                 className="flex items-center gap-2 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 px-4 py-2 rounded-xl text-sm font-semibold cursor-pointer shadow-sm hover:bg-rose-100 dark:hover:bg-rose-900/40 transition focus:outline-none focus:ring-0 active:scale-95"
@@ -218,7 +218,7 @@ export default function MyStartupPage() {
         </AnimatePresence>
       </motion.div>
 
-      {/* 🛑 Modern Delete Confirmation Modal/Box */}
+
       <AnimatePresence>
         {showDeleteConfirm && (
           <motion.div 
@@ -279,7 +279,6 @@ export default function MyStartupPage() {
       <AnimatePresence mode="wait">
         {!startup || isEditing ? (
           
-          /* 📝 1st State: Create / Edit Startup Form */
           <motion.div
             key="create-form-card"
             variants={itemVariants}

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiUploadCloud, FiCheck, FiX } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
-import { authClient } from "@/lib/auth-client"; // আপনার Better-Auth ক্লায়েন্ট পাথ
+import { authClient } from "@/lib/auth-client";
 
 export default function SignupPage() {
     const router = useRouter();
@@ -14,7 +14,6 @@ export default function SignupPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
 
-    // ফর্ম স্টেটস
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -22,13 +21,11 @@ export default function SignupPage() {
     const [imageUrl, setImageUrl] = useState("");
     const [isUploading, setIsUploading] = useState(false);
 
-    // পাসওয়ার্ড ভ্যালিডেশন চেকার্স
     const hasMinLength = password.length >= 6;
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
     const isPasswordValid = hasMinLength && hasUppercase && hasLowercase;
 
-    // Imgbb-তে সরাসরি ইমেজ ফাইল আপলোড করার ফাংশন
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -69,7 +66,6 @@ export default function SignupPage() {
         }
     };
 
-    // ফর্ম সাবমিট ও Better-Auth দিয়ে অ্যাকাউন্ট তৈরি
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -87,14 +83,14 @@ export default function SignupPage() {
                 password,
                 name,
                 image: imageUrl || undefined,
-                role: role, // ⚡ ফিক্স: Better-Auth এ কাস্টম এডিশনাল ফিল্ড এভাবে সরাসরি পাস করতে হয়
-                callbackURL: "/", // সফল হলে হোম পেজে রিডাইরেক্ট হবে
+                role: role, 
+                callbackURL: "/", 
             }, {
                 onRequest: () => setIsLoading(true),
                 onSuccess: () => {
                     setIsLoading(false);
                     router.push("/");
-                    router.refresh();
+                    // router.refresh();
                 },
                 onError: (ctx) => {
                     setIsLoading(false);
@@ -109,7 +105,6 @@ export default function SignupPage() {
 
     return (
         <div className="flex min-h-[90vh] items-center justify-center bg-slate-50/50 px-4 py-8">
-            {/* ফ্রেমার মোশন দিয়ে সাইনআপ কার্ড অ্যানিমেশন */}
             <motion.div
                 initial={{ opacity: 0, y: 25, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -118,7 +113,6 @@ export default function SignupPage() {
                 className="w-full max-w-[400px] rounded-2xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-100/50"
             >
 
-                {/* লোগো ও হেডার */}
                 <div className="flex flex-col items-center text-center">
                     <motion.div 
                         initial={{ scale: 0.5 }}
@@ -150,7 +144,6 @@ export default function SignupPage() {
                     </motion.div>
                 )}
 
-                {/* ডিভাইডার */}
                 <div className="relative my-4">
                     <div className="absolute inset-0 flex items-center" aria-hidden="true">
                         <div className="w-full border-t border-slate-100" />
@@ -160,10 +153,8 @@ export default function SignupPage() {
                     </div>
                 </div>
 
-                {/* সাইনআপ ফর্ম */}
                 <form onSubmit={handleSubmit} className="space-y-3.5">
 
-                    {/* নাম ফিল্ড */}
                     <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
                         <div className="relative rounded-xl shadow-sm">
@@ -181,7 +172,6 @@ export default function SignupPage() {
                         </div>
                     </div>
 
-                    {/* ইমেইল ফিল্ড */}
                     <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
                         <div className="relative rounded-xl shadow-sm">
@@ -199,7 +189,6 @@ export default function SignupPage() {
                         </div>
                     </div>
 
-                    {/* রোল সিলেকশন */}
                     <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1.5">Select Role</label>
                         <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-slate-100 p-1">
@@ -226,7 +215,6 @@ export default function SignupPage() {
                         </div>
                     </div>
 
-                    {/* ইমেজ আপলোড */}
                     <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1">Profile Image</label>
                         <div className="flex items-center gap-3">
@@ -254,7 +242,6 @@ export default function SignupPage() {
                         </div>
                     </div>
 
-                    {/* পাসওয়ার্ড ফিল্ড */}
                     <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1">Password</label>
                         <div className="relative rounded-xl shadow-sm">
@@ -278,7 +265,6 @@ export default function SignupPage() {
                             </button>
                         </div>
 
-                        {/* পাসওয়ার্ড ইন্ডিকেটর */}
                         <div className="mt-2 space-y-1 rounded-xl bg-slate-50 p-2 border border-slate-100/70">
                             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Requirements:</p>
                             <div className="flex items-center gap-1 text-[10px]">
@@ -296,7 +282,6 @@ export default function SignupPage() {
                         </div>
                     </div>
 
-                    {/* সাবমিট বাটন */}
                     <div className="pt-1">
                         <motion.button
                             whileHover={{ scale: 1.01 }}

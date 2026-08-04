@@ -47,7 +47,6 @@ export default function FounderSidebar({ user }) {
 
   return (
     <>
-      {/* 📱 মোবাইল ও ট্যাবলেটের হোয়াইট টপবার */}
       <div className="lg:hidden w-full bg-white text-slate-800 p-4 flex items-center justify-between border-b border-slate-100 sticky top-0 z-50">
         <div className="flex flex-col items-start gap-1 ">
           <button
@@ -73,7 +72,6 @@ export default function FounderSidebar({ user }) {
         </button>
       </div>
 
-      {/* 💻 ক্লিন হোয়াইট সাইডবার */}
       <aside
         className={`
     fixed inset-y-0 left-0 z-50 w-72
@@ -90,7 +88,6 @@ export default function FounderSidebar({ user }) {
   `}
       >
 
-        {/* ⚡ টপ হেডার সেকশন */}
         <div className="p-5 border-b border-slate-50 flex flex-col items-start gap-3 ">
           <button
             onClick={() => router.push("/")}
@@ -108,35 +105,31 @@ export default function FounderSidebar({ user }) {
           </div>
         </div>
 
-        {/* 👤 ডাইনামিক ইউজার প্রোফাইল সেকশন (লগইন করা অ্যাকাউন্ট অনুযায়ী পরিবর্তন হবে) */}
         <div className="p-5 border-b border-slate-50 flex items-center gap-3">
           {user?.image ? (
-            // যদি ইউজার ছবি দেয়, তবে সেই ছবি লোড হবে
             <img
               src={user.image}
               alt={user.name || "User Profile"}
               className="h-10 w-10 rounded-full object-cover border border-slate-200 ring-2 ring-slate-100"
             />
           ) : (
-            // যদি ছবি না থাকে, তবে নামের ১ম অক্ষর দিয়ে ডিফোল্ট অ্যাভাটার তৈরি হবে
             <div className="h-10 w-10 rounded-full bg-[#8B5CF6]/10 text-[#8B5CF6] font-bold flex items-center justify-center text-base border border-[#8B5CF6]/20">
               {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
             </div>
           )}
 
           <div className="flex flex-col items-start gap-0.5 max-w-[170px]">
-            {/* ডাইনামিক নাম */}
+
             <span className="text-sm font-semibold text-slate-700 truncate w-full">
               {user?.name || "Guest User"}
             </span>
-            {/* ডাইনামিক রোল */}
+
             <span className="px-2 py-0.5 text-[10px] font-medium bg-[#EEF2FF] text-[#6366F1] rounded-full border border-indigo-100 capitalize">
               {user?.role || "Member"}
             </span>
           </div>
         </div>
 
-        {/* 📋 মেইন মেনু আইটেমস */}
         <nav className="p-3 flex-1 space-y-1.5 overflow-y-auto">
           {menuItems.map((item) => {
             const isActive = currentPath === item.route;

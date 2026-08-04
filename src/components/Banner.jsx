@@ -10,13 +10,12 @@ import WhyJoin from "./WhyJoin";
 import Testimonials from "./Testimonials";
 
 export default function Banner() {
-  // এনিমেশনের জন্য ভ্যারিয়েন্ট (স্ট্যাগারিং ইফেক্ট তৈরি করতে)
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2, // প্রতিটি চাইল্ড এলিমেন্ট একটু গ্যাপ দিয়ে এনিমেট হবে
+        staggerChildren: 0.2, 
       },
     },
   };
@@ -32,7 +31,7 @@ export default function Banner() {
 
   return (
     <section className="relative w-full overflow-hidden bg-gradient-to-b from-indigo-50/50 via-white to-white py-20 md:py-32">
-      {/* ব্যাকগ্রাউন্ডের মডার্ন গ্লোয়িং ব্লার ইফেক্ট (ছবির মতো প্রিমিয়াম লুক দিতে) */}
+
       <div className="absolute top-0 left-1/2 -z-10 h-[600px] w-[1000px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-indigo-200/30 to-purple-200/30 blur-[120px]" />
 
       <div className="mx-auto max-w-5xl px-6">
@@ -42,7 +41,6 @@ export default function Banner() {
           animate="visible"
           className="flex flex-col items-center text-center"
         >
-          {/* ১. টপ ব্যাজ (The #1 Startup Team Building Platform) */}
           <motion.div
             variants={itemVariants}
             className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50/80 px-4 py-1.5 text-xs md:text-sm font-medium text-indigo-700 backdrop-blur-sm"
@@ -50,7 +48,7 @@ export default function Banner() {
             🚀 The #1 Startup Team Building Platform
           </motion.div>
 
-          {/* ২. মেইন বোল্ড হেডিং */}
+
           <motion.h1
             variants={itemVariants}
             className="mt-8 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl md:text-6xl lg:text-7xl"
@@ -61,7 +59,6 @@ export default function Banner() {
             </span>
           </motion.h1>
 
-          {/* ৩. সাবহেডিং ডিসক্রিপশন */}
           <motion.p
             variants={itemVariants}
             className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed text-gray-500"
@@ -71,7 +68,6 @@ export default function Banner() {
             — all in one place.
           </motion.p>
 
-          {/* ৪. কল-টু-অ্যাকশন বাটনসমূহ */}
           <motion.div
             variants={itemVariants}
             className="mt-10 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
@@ -92,7 +88,6 @@ export default function Banner() {
             </Link>
           </motion.div>
 
-          {/* ৫. ট্রাস্টেড ফুটার টেক্সট */}
           <motion.p
             variants={itemVariants}
             className="mt-12 text-xs md:text-sm text-gray-400"
@@ -104,7 +99,6 @@ export default function Banner() {
 
         </motion.div>
 
-        {/* 📊 Stats Section */}
         <motion.div
           variants={itemVariants}
           className="mt-30 grid w-full max-w-6xl grid-cols-2 gap-5 rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-lg backdrop-blur-md md:grid-cols-4"
